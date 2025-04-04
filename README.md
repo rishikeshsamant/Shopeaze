@@ -34,10 +34,7 @@ And to be clear — we’re not just another app for cash flow tracking or stock
 
 ### Shopeaze — The Ultimate POS on Your Fingertips
 
-No more juggling between multiple apps.  No need for expensive setups, barcode scanners, or confusing software. **Shopeaze** is a simple app made for the **simple business owner**.  
-
-Just create an account, set up your profile, add your items, enter customer details —  
-**and you're ready to bill.** Generate invoices, track sales, send or manage bills — all from one easy-to-use platform.
+No more juggling between multiple apps.  No need for expensive setups, barcode scanners, or confusing software. **Shopeaze** is a simple app made for the **simple business owner**. Just create an account, set up your profile, add your items, enter customer details — **and you're ready to bill.** Generate invoices, track sales, send or manage bills — all from one easy-to-use platform.
 
 Shopeaze is a **robust, mobile-friendly, and intuitive web application** built to help you:
 - ✅ Manage customers  
