@@ -1,18 +1,22 @@
 import dotenv from "dotenv";
-import connectDB from "./db/index.js";
+dotenv.config({ path: "./.env" });
+
+import mongoose from "mongoose";
 import { app } from "./app.js";
 import { PORT } from "./constants.js";
 
-dotenv.config({
-  path: "./.env",
-});
-
-connectDB()
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
+    console.log("MongoDB connected");
     app.listen(PORT, () => {
-      console.log(`Server is running at: http://localhost:${PORT}`);
+      console.log(`Server is running at http://localhost:${PORT}`);
     });
   })
   .catch((err) => {
-    console.log("MONGO DB connection failed !!! ", err);
+    console.error("MONGO DB connection failed:", err);
+    process.exit(1);
   });
