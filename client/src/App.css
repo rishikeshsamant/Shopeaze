@@ -1,42 +1,190 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+@import url('https://fonts.googleapis.com/css2?family=Jura:wght@300..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playwrite+HR+Lijeva:wght@100..400&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+    font-family: 'Montserrat', sans-serif;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+:root {
+  --primary-color: #896790;
+  --primary-hover: #7a5981;
+  --secondary-color: #bfadcc;
+  --accent-color: #f2bae4;
+  --light-accent: #ffe1f5;
+  --tertiary-color: #dfbbda;
+  --bg-light: #ffffff;
+  --bg-dark: #1a1520;
+  --text-light: #4a3a51;
+  --text-dark: #ffe1f5;
+  --border-light: #dfbbda;
+  --border-dark: #896790;
+  --shadow-color-light: rgba(137, 103, 144, 0.2);
+  --shadow-color-dark: rgba(0, 0, 0, 0.3);
+  --card-bg-light: #ffffff;
+  --card-bg-dark: #231b29;
+  --sidebar-light: linear-gradient(180deg, var(--primary-color), #675073);
+  --sidebar-dark: linear-gradient(180deg, #231b29, #1a1520);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-light);
+  color: var(--text-light);
+}
+
+body.dark-theme {
+  background-color: var(--bg-dark);
+  color: var(--text-dark);
+}
+
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Light theme styles */
+.light-theme {
+  --current-bg: var(--bg-light);
+  --current-text: var(--text-light);
+  --current-border: var(--border-light);
+  --current-card-bg: var(--card-bg-light);
+  --current-shadow: var(--shadow-color-light);
+  --current-sidebar: var(--sidebar-light);
+}
+
+/* Dark theme styles */
+.dark-theme {
+  --current-bg: var(--bg-dark);
+  --current-text: var(--text-dark);
+  --current-border: var(--border-dark);
+  --current-card-bg: var(--card-bg-dark);
+  --current-shadow: var(--shadow-color-dark);
+  --current-sidebar: var(--sidebar-dark);
+}
+
+.side-navigation {
+  width: 240px;
+  background: var(--current-sidebar);
+  color: white;
+  padding: 20px 0;
+  box-shadow: 2px 0 10px var(--current-shadow);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 10;
 }
 
 .logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  font-size: 24px;
+  font-weight: 700;
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+  margin-bottom: 30px;
+  letter-spacing: 1px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+.nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 0 15px;
+  flex: 1;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.3s;
+  font-weight: 500;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  transform: translateX(5px);
+}
+
+.nav-link svg {
+  margin-right: 12px;
+  font-size: 18px;
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 240px;
+  padding: 20px;
+  transition: margin 0.3s;
+  background-color: var(--current-bg);
+  color: var(--current-text);
+  min-height: 100vh;
+}
+
+/* Theme toggle button */
+.theme-toggle {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  padding: 12px;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: 20px auto;
+  transition: all 0.3s;
+  font-size: 18px;
+}
+
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(30deg);
+}
+
+@media (max-width: 768px) {
+  .side-navigation {
+    width: 60px;
+    padding: 15px 0;
   }
-  to {
-    transform: rotate(360deg);
+  
+  .logo {
+    font-size: 16px;
+    padding: 15px 0;
+    margin-bottom: 20px;
   }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+  
+  .nav-link span {
+    display: none;
   }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+  
+  .nav-link {
+    justify-content: center;
+    padding: 12px;
+  }
+  
+  .nav-link svg {
+    margin-right: 0;
+    font-size: 20px;
+  }
+  
+  .main-content {
+    margin-left: 60px;
+  }
+  
+  .theme-toggle {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+    margin: 15px auto;
+  }
 }
