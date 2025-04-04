@@ -1,0 +1,271 @@
+/* Settings.css */
+
+/* Theme Variables */
+:root {
+    --setting-bg-light: #ffffff;
+    --setting-bg-dark: #231b29;
+    --setting-border-light: #ffe1f5;
+    --setting-border-dark: #4a3a51;
+    --setting-text-light: #4a3a51;
+    --setting-text-dark: #ffe1f5;
+    --setting-card-shadow-light: rgba(137, 103, 144, 0.1);
+    --setting-card-shadow-dark: rgba(0, 0, 0, 0.3);
+    --setting-input-bg-light: #ffffff;
+    --setting-input-bg-dark: #312437;
+    --setting-input-border-light: #dfbbda;
+    --setting-input-border-dark: #675073;
+    --setting-toggle-bg-light: #dfbbda;
+    --setting-toggle-bg-dark: #4a3a51;
+    --setting-swatch-border-light: #ffffff;
+    --setting-swatch-border-dark: #312437;
+}
+
+/* Light theme values */
+.light-theme {
+    --current-setting-bg: var(--setting-bg-light);
+    --current-setting-border: var(--setting-border-light);
+    --current-setting-text: var(--setting-text-light);
+    --current-setting-card-shadow: var(--setting-card-shadow-light);
+    --current-setting-input-bg: var(--setting-input-bg-light);
+    --current-setting-input-border: var(--setting-input-border-light);
+    --current-setting-toggle-bg: var(--setting-toggle-bg-light);
+    --current-setting-swatch-border: var(--setting-swatch-border-light);
+}
+
+/* Dark theme values */
+.dark-theme {
+    --current-setting-bg: var(--setting-bg-dark);
+    --current-setting-border: var(--setting-border-dark);
+    --current-setting-text: var(--setting-text-dark);
+    --current-setting-card-shadow: var(--setting-card-shadow-dark);
+    --current-setting-input-bg: var(--setting-input-bg-dark);
+    --current-setting-input-border: var(--setting-input-border-dark);
+    --current-setting-toggle-bg: var(--setting-toggle-bg-dark);
+    --current-setting-swatch-border: var(--setting-swatch-border-dark);
+}
+
+.settings-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.settings-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #896790;
+}
+
+.settings-card {
+    background-color: var(--current-setting-bg);
+    border-radius: 16px;
+    box-shadow: 0 5px 15px var(--current-setting-card-shadow);
+    padding: 24px;
+    margin-bottom: 24px;
+    border: 1px solid var(--current-setting-border);
+    transition: all 0.3s;
+}
+
+.settings-card:hover {
+    box-shadow: 0 8px 25px var(--current-setting-card-shadow);
+    transform: translateY(-3px);
+}
+
+.card-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #896790;
+    border-bottom: 1px solid var(--current-setting-border);
+    padding-bottom: 10px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full-width {
+    grid-column: span 2;
+}
+
+.form-group label {
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #896790;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea {
+    padding: 12px 15px;
+    border: 1px solid var(--current-setting-input-border);
+    background-color: var(--current-setting-input-bg);
+    color: var(--current-setting-text);
+    border-radius: 10px;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #896790;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(137, 103, 144, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s;
+    box-shadow: 0 4px 10px rgba(137, 103, 144, 0.15);
+}
+
+.btn i {
+    margin-right: 8px;
+}
+
+.btn.primary {
+    background: linear-gradient(90deg, #896790, #dfbbda);
+    color: white;
+}
+
+.btn.primary:hover {
+    box-shadow: 0 6px 15px rgba(137, 103, 144, 0.25);
+    transform: translateY(-2px);
+}
+
+.btn.secondary {
+    background-color: #bfadcc;
+    color: #4a3a51;
+}
+
+.dark-theme .btn.secondary {
+    background-color: rgba(137, 103, 144, 0.3);
+    color: #ffe1f5;
+}
+
+.btn.secondary:hover {
+    background-color: #dfbbda;
+}
+
+.dark-theme .btn.secondary:hover {
+    background-color: rgba(137, 103, 144, 0.5);
+}
+
+.settings-action-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.option-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--current-setting-toggle-bg);
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+    background-color: #896790;
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(26px);
+}
+
+.color-option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.color-swatch {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border: 2px solid var(--current-setting-swatch-border);
+}
+
+.option-label {
+    font-weight: 500;
+    color: var(--current-setting-text);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-group.full-width {
+        grid-column: span 1;
+    }
+    
+    .settings-title {
+        font-size: 24px;
+    }
+    
+    .card-title {
+        font-size: 18px;
+    }
+}
