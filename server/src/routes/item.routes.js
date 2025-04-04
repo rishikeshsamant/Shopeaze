@@ -1,7 +1,7 @@
 import express from "express";
 import {
   createItem,
-  getAllItems,
+  getItems as getAllItems,
   getItemById,
   updateItem,
   deleteItem,

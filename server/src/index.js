@@ -6,7 +6,7 @@ import { app } from "./app.js";
 import { PORT } from "./constants.js";
 
 mongoose
-  .connect(process.env.MONGO_URI, {
+  .connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

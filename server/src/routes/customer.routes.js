@@ -1,7 +1,7 @@
 import express from "express";
 import {
   createCustomer,
-  getAllCustomers,
+  getCustomers as getAllCustomers,
   getCustomerById,
   updateCustomer,
   deleteCustomer,

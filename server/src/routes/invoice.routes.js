@@ -1,7 +1,7 @@
 import express from "express";
 import {
   createInvoice,
-  getAllInvoices,
+  getInvoices as getAllInvoices,
   getInvoiceById,
   updateInvoice,
   deleteInvoice,
