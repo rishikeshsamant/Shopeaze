@@ -37,7 +37,8 @@ const navLinksMobile = [
   { path: '/items', name: 'Items', icon: faShoppingBag },
   { path: '/customers', name: 'Customers', icon: faUsers },
   { path: '/', name: 'Home', icon: faHome },
-  { path: '/invoices', name: 'Invoices', icon: faFileInvoice }
+  { path: '/invoices', name: 'Invoices', icon: faFileInvoice },
+  { path: '/settings', name: 'Settings', icon: faCog }
 ];
 
 // Protected Route component
