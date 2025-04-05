@@ -20,6 +20,7 @@ import {
   faUser
 } from '@fortawesome/free-solid-svg-icons';
 import Profile from './Profile';
+import Bill from '../Components/Bill';
 
 // Circular progress with label component
 const CircularProgressWithLabel = ({ value, color, size = 70, thickness = 5 }) => {
@@ -458,6 +459,7 @@ const Home = () => {
           </div>
         </>
       )}
+      <Bill />
     </div>
   );
 };
