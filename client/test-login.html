@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Test</title>
+</head>
+<body>
+    <h1>Login Test</h1>
+    <div id="result"></div>
+    
+    <script>
+        async function testLogin() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing login...';
+            
+            try {
+                // Try with https://shopeaze-server.onrender.com/api/user/login
+                const response1 = await fetch('https://shopeaze-server.onrender.com/api/user/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: 'test@example.com', password: 'password123' })
+                });
+                
+                const data1 = await response1.json();
+                
+                // Try with just /user/login
+                const response2 = await fetch('https://shopeaze-server.onrender.com/user/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: 'test@example.com', password: 'password123' })
+                });
+                
+                const data2 = await response2.json();
+                
+                resultDiv.innerHTML = `
+                    <h3>Test Results:</h3>
+                    <p>Using /api/user/login: ${JSON.stringify(data1)}</p>
+                    <p>Using /user/login: ${JSON.stringify(data2)}</p>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <p>Error: ${error.message}</p>
+                    <p>Please open the browser console for more details</p>
+                `;
+                console.error('Login test error:', error);
+            }
+        }
+        
+        // Run test on page load
+        testLogin();
+    </script>
+</body>
+</html> 
