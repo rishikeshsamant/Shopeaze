@@ -235,6 +235,23 @@ const Invoice = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     
+    if (name === 'customer' && value) {
+      // When customer is selected, auto-populate customer details
+      const selectedCustomer = customers.find(c => c._id === value);
+      
+      if (selectedCustomer) {
+        setFormData(prev => ({
+          ...prev,
+          customer: value,
+          email: selectedCustomer.email || prev.email,
+          phone: selectedCustomer.phoneNumber || prev.phone,
+          billingAddress: selectedCustomer.billingAddress || prev.billingAddress,
+          shippingAddress: selectedCustomer.shippingAddress || prev.shippingAddress
+        }));
+        return;
+      }
+    }
+    
     if (name.includes('.')) {
       // Handle nested properties (e.g. paymentInfo.method)
       const [parent, child] = name.split('.');
