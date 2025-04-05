@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/Home.css';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-  faShoppingCart, 
-  faUsers, 
-  faReceipt, 
+import {
+  faShoppingCart,
+  faUsers,
+  faReceipt,
   faMoneyBillWave,
   faChartLine,
   faArrowUp,
@@ -15,14 +16,16 @@ import {
   faChartBar,
   faBell,
   faExchangeAlt,
-  faPlus
+  faPlus,
+  faUser
 } from '@fortawesome/free-solid-svg-icons';
+import Profile from './Profile';
 
 // Circular progress with label component
 const CircularProgressWithLabel = ({ value, color, size = 70, thickness = 5 }) => {
   const circumference = 2 * Math.PI * ((size - thickness) / 2);
   const strokeDashoffset = circumference - (value / 100) * circumference;
-  
+
   return (
     <div className="circular-progress-container">
       <svg className="circular-progress" width={size} height={size}>
@@ -54,7 +57,7 @@ const CircularProgressWithLabel = ({ value, color, size = 70, thickness = 5 }) =
 // Enhanced Stat Card component
 const StatCard = ({ title, value, change, icon, iconColor }) => {
   const isPositive = parseFloat(change) > 0;
-  
+
   return (
     <div className="stat-card">
       <div className="stat-card-header">
@@ -63,9 +66,9 @@ const StatCard = ({ title, value, change, icon, iconColor }) => {
           <FontAwesomeIcon icon={icon} />
         </div>
       </div>
-      
+
       <h2 className="stat-card-value">{value}</h2>
-      
+
       <div className="stat-card-footer">
         <div className={`stat-card-change ${isPositive ? 'positive' : 'negative'}`}>
           <FontAwesomeIcon icon={isPositive ? faChartLine : faArrowDown} />
@@ -83,7 +86,7 @@ const RevenueCard = () => {
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
   const values = [40, 65, 50, 80, 75, 90];
   const maxValue = Math.max(...values);
-  
+
   return (
     <div className="revenue-card">
       <div className="revenue-card-header">
@@ -100,9 +103,9 @@ const RevenueCard = () => {
           </button>
         </div>
       </div>
-      
+
       <h2 className="revenue-card-amount">₹24,680.50</h2>
-      
+
       <div className="revenue-card-change">
         <div className="change-indicator positive">
           <FontAwesomeIcon icon={faArrowUp} />
@@ -110,15 +113,15 @@ const RevenueCard = () => {
         </div>
         <p className="change-period">vs previous period</p>
       </div>
-      
+
       <div className="chart-container">
         {months.map((month, index) => (
-          <div 
-            key={month} 
+          <div
+            key={month}
             className={`chart-bar ${index === 5 ? 'active' : ''}`}
-            style={{ 
+            style={{
               height: `${(values[index] / maxValue) * 200}px`,
-            }} 
+            }}
           >
             <div className="chart-tooltip">{`₹${values[index] * 100}`}</div>
           </div>
@@ -140,7 +143,7 @@ const PerformanceCard = () => {
     { name: 'Customer Retention', value: 92, color: '#bfadcc' },
     { name: 'New Customers', value: 62, color: '#f2bae4' },
   ];
-  
+
   return (
     <div className="performance-card">
       <div className="performance-card-header">
@@ -149,23 +152,23 @@ const PerformanceCard = () => {
           <FontAwesomeIcon icon={faEllipsisV} />
         </button>
       </div>
-      
+
       <div className="metrics-container">
         {metrics.map((metric) => (
           <div className="metric-item" key={metric.name}>
-          <div className="metric-header">
+            <div className="metric-header">
               <span className="metric-name">{metric.name}</span>
               <span className="metric-value">{metric.value}%</span>
-          </div>
-          <div className="progress-container">
-              <div 
-                className="progress-bar" 
-                style={{ 
-                  width: `${metric.value}%`, 
-                  backgroundColor: metric.color 
+            </div>
+            <div className="progress-container">
+              <div
+                className="progress-bar"
+                style={{
+                  width: `${metric.value}%`,
+                  backgroundColor: metric.color
                 }}
               ></div>
-        </div>
+            </div>
           </div>
         ))}
       </div>
@@ -181,11 +184,11 @@ const QuickActionsCard = () => {
     { name: 'Record Payment', icon: faCreditCard, color: '#dfbbda' },
     { name: 'Sales Report', icon: faChartBar, color: '#f2bae4' },
   ];
-  
+
   return (
     <div className="quick-actions-card">
       <h3 className="quick-actions-title">Quick Actions</h3>
-      
+
       <div className="actions-grid">
         {actions.map((action) => (
           <button
@@ -208,29 +211,29 @@ const QuickActionsCard = () => {
 // Recent Activities Card
 const ActivitiesCard = () => {
   const activities = [
-    { 
-      label: 'New invoice created', 
-      value: 'Invoice #12345', 
+    {
+      label: 'New invoice created',
+      value: 'Invoice #12345',
       time: '10 min ago',
       icon: faReceipt,
       color: '#896790'
     },
-    { 
-      label: 'New customer added', 
-      value: 'Sarah Johnson', 
+    {
+      label: 'New customer added',
+      value: 'Sarah Johnson',
       time: '1 hour ago',
       icon: faUsers,
       color: '#bfadcc'
     },
-    { 
-      label: 'Payment received', 
-      value: '₹1,250.00', 
+    {
+      label: 'Payment received',
+      value: '₹1,250.00',
       time: '3 hours ago',
       icon: faMoneyBillWave,
       color: '#dfbbda'
     }
   ];
-  
+
   return (
     <div className="activities-card">
       <div className="activities-header">
@@ -239,7 +242,7 @@ const ActivitiesCard = () => {
           <FontAwesomeIcon icon={faBell} />
         </button>
       </div>
-      
+
       <div className="activities-list">
         {activities.map((activity, index) => (
           <React.Fragment key={index}>
@@ -259,7 +262,7 @@ const ActivitiesCard = () => {
           </React.Fragment>
         ))}
       </div>
-      
+
       <button className="view-all-button">
         View All Activities
       </button>
@@ -271,12 +274,12 @@ const ActivitiesCard = () => {
 function hexToRgb(hex) {
   // Remove # if present
   hex = hex.replace('#', '');
-  
+
   // Parse the hex values
   const r = parseInt(hex.substring(0, 2), 16);
   const g = parseInt(hex.substring(2, 4), 16);
   const b = parseInt(hex.substring(4, 6), 16);
-  
+
   return `${r}, ${g}, ${b}`;
 }
 
@@ -284,7 +287,7 @@ const Home = () => {
   const [stats, setStats] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showMenu, setShowMenu] = useState(false);
-  
+
   // Mock data for demonstration
   useEffect(() => {
     const mockStats = [
@@ -317,14 +320,14 @@ const Home = () => {
         iconColor: '#f2bae4',
       },
     ];
-    
+
     // Simulate loading delay
     setTimeout(() => {
       setStats(mockStats);
       setIsLoading(false);
     }, 1000);
   }, []);
-  
+
   // Helper function to format currency
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-US', {
@@ -335,14 +338,14 @@ const Home = () => {
   };
 
   // Function to fetch actual stats from API (mocked)
-    const fetchStats = async () => {
+  const fetchStats = async () => {
     setIsLoading(true);
     try {
       // Mock API call
       // In a real app, this would be:
       // const response = await fetch('/api/dashboard/stats');
       // const data = await response.json();
-      
+
       // Using mock data for demonstration
       const data = {
         totalSales: 14528.25,
@@ -354,7 +357,7 @@ const Home = () => {
         orderGrowth: 8.4,
         pendingGrowth: -5.2,
       };
-      
+
       setStats([
         {
           title: 'Total Sales',
@@ -385,12 +388,12 @@ const Home = () => {
           iconColor: '#f2bae4',
         },
       ]);
-      } catch (error) {
+    } catch (error) {
       console.error('Failed to fetch dashboard stats:', error);
-      } finally {
+    } finally {
       setIsLoading(false);
-      }
-    };
+    }
+  };
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
@@ -411,6 +414,11 @@ const Home = () => {
             <FontAwesomeIcon icon={faPlus} />
             Add New Sale
           </button>
+          <Link to="/profile" className="profile-link">
+            <button className="icon-button profile-button">
+              <FontAwesomeIcon icon={faUser} />
+            </button>
+          </Link>
         </div>
       </div>
 
@@ -421,9 +429,9 @@ const Home = () => {
         </div>
       ) : (
         <>
-      <div className="stats-grid">
+          <div className="stats-grid">
             {stats.map((stat, index) => (
-        <StatCard
+              <StatCard
                 key={index}
                 title={stat.title}
                 value={stat.value}
@@ -432,22 +440,22 @@ const Home = () => {
                 iconColor={stat.iconColor}
               />
             ))}
-      </div>
+          </div>
 
-      <div className="dashboard-grid">
-        <div className="grid-item large">
-          <RevenueCard />
-        </div>
-        <div className="grid-item">
-          <PerformanceCard />
-        </div>
-        <div className="grid-item">
-          <QuickActionsCard />
-        </div>
-        <div className="grid-item large">
-          <ActivitiesCard />
-        </div>
-      </div>
+          <div className="dashboard-grid">
+            <div className="grid-item large">
+              <RevenueCard />
+            </div>
+            <div className="grid-item">
+              <PerformanceCard />
+            </div>
+            <div className="grid-item">
+              <QuickActionsCard />
+            </div>
+            <div className="grid-item large">
+              <ActivitiesCard />
+            </div>
+          </div>
         </>
       )}
     </div>

@@ -16,6 +16,7 @@ import Home from './pages/Home';
 import Invoice from './pages/Invoice';
 import Items from './pages/Items';
 import Setting from './pages/Setting';
+import Profile from './pages/Profile';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 
 // Navigation links data
@@ -92,6 +93,7 @@ function AppContent() {
           <Route path="/customers" element={<Customer />} />
           <Route path="/invoices" element={<Invoice />} />
           <Route path="/settings" element={<Setting />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </main>
 

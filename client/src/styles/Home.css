@@ -188,6 +188,30 @@
   color: #896790;
 }
 
+/* Profile Link */
+.profile-link {
+  margin-left: 10px;
+  text-decoration: none;
+}
+
+.profile-button {
+  border-radius: 50%;
+  background-color: #896790;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(137, 103, 144, 0.3);
+  border: 2px solid #f2bae4;
+  transition: all 0.3s ease;
+}
+
+.profile-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(137, 103, 144, 0.4);
+  border-color: #fff;
+}
+
 /* Loading */
 .loading-container {
   display: flex;
@@ -743,4 +767,56 @@
 .view-all-button:hover {
   background-color: #f2bae4;
   color: #4a3a51;
+}
+
+/* Add this CSS to the end of the file */
+
+.connection-status {
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+}
+
+.connection-status.loading {
+  background-color: #f5f5f5;
+  color: #666;
+  border: 1px solid #ddd;
+}
+
+.connection-status.success {
+  background-color: #e6f4ea;
+  color: #1e7e34;
+  border: 1px solid #c3e6cb;
+}
+
+.connection-status.error {
+  background-color: #fbe9e7;
+  color: #d32f2f;
+  border: 1px solid #ffcdd2;
+}
+
+/* Add styling for warning banner */
+.warning-banner {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.warning-icon {
+  font-size: 1.25rem;
+  color: #856404;
+}
+
+.warning-message {
+  margin: 0;
 }
