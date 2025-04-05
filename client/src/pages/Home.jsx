@@ -153,11 +153,11 @@ const PerformanceCard = () => {
       <div className="metrics-container">
         {metrics.map((metric) => (
           <div className="metric-item" key={metric.name}>
-            <div className="metric-header">
+          <div className="metric-header">
               <span className="metric-name">{metric.name}</span>
               <span className="metric-value">{metric.value}%</span>
-            </div>
-            <div className="progress-container">
+          </div>
+          <div className="progress-container">
               <div 
                 className="progress-bar" 
                 style={{ 
@@ -165,7 +165,7 @@ const PerformanceCard = () => {
                   backgroundColor: metric.color 
                 }}
               ></div>
-            </div>
+        </div>
           </div>
         ))}
       </div>
@@ -333,9 +333,9 @@ const Home = () => {
       minimumFractionDigits: 2
     }).format(amount);
   };
-  
+
   // Function to fetch actual stats from API (mocked)
-  const fetchStats = async () => {
+    const fetchStats = async () => {
     setIsLoading(true);
     try {
       // Mock API call
@@ -385,17 +385,17 @@ const Home = () => {
           iconColor: '#f2bae4',
         },
       ]);
-    } catch (error) {
+      } catch (error) {
       console.error('Failed to fetch dashboard stats:', error);
-    } finally {
+      } finally {
       setIsLoading(false);
-    }
-  };
-  
+      }
+    };
+
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
-  
+
   return (
     <div className="dashboard">
       <div className="dashboard-header">
@@ -413,7 +413,7 @@ const Home = () => {
           </button>
         </div>
       </div>
-      
+
       {isLoading ? (
         <div className="loading-container">
           <div className="loading-spinner"></div>
@@ -421,9 +421,9 @@ const Home = () => {
         </div>
       ) : (
         <>
-          <div className="stats-grid">
+      <div className="stats-grid">
             {stats.map((stat, index) => (
-              <StatCard
+        <StatCard
                 key={index}
                 title={stat.title}
                 value={stat.value}
@@ -432,22 +432,22 @@ const Home = () => {
                 iconColor={stat.iconColor}
               />
             ))}
-          </div>
-          
-          <div className="dashboard-grid">
-            <div className="grid-item large">
-              <RevenueCard />
-            </div>
-            <div className="grid-item">
-              <PerformanceCard />
-            </div>
-            <div className="grid-item">
-              <QuickActionsCard />
-            </div>
-            <div className="grid-item large">
-              <ActivitiesCard />
-            </div>
-          </div>
+      </div>
+
+      <div className="dashboard-grid">
+        <div className="grid-item large">
+          <RevenueCard />
+        </div>
+        <div className="grid-item">
+          <PerformanceCard />
+        </div>
+        <div className="grid-item">
+          <QuickActionsCard />
+        </div>
+        <div className="grid-item large">
+          <ActivitiesCard />
+        </div>
+      </div>
         </>
       )}
     </div>
