@@ -2,6 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import '../styles/Profile.css';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
+import { useAuth } from '../contexts/AuthContext';
+import { userService } from '../services/api';
+import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faUser,
@@ -12,12 +15,14 @@ import {
   faSpinner,
   faCheck,
   faTimes,
-  faArrowLeft
+  faArrowLeft,
+  faKey
 } from '@fortawesome/free-solid-svg-icons';
 
 export default function Profile() {
   const navigate = useNavigate();
   const { theme } = useTheme();
+  const { currentUser, updateProfile } = useAuth();
   const [user, setUser] = useState({
     name: '',
     email: '',
@@ -31,41 +36,41 @@ export default function Profile() {
   const [message, setMessage] = useState({ text: '', type: '' });
   const fileInputRef = useRef(null);
   const [previewImage, setPreviewImage] = useState(null);
+  const [showPasswordSection, setShowPasswordSection] = useState(false);
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+  const [passwordErrors, setPasswordErrors] = useState({});
   
   useEffect(() => {
-    // Fetch user data from backend
-    fetchUserData();
-  }, []);
-  
-  const fetchUserData = async () => {
-    setIsLoading(true);
-    try {
-      // Mock data for now - in production, this would be an API call
-      // const response = await fetch('/api/user/profile');
-      // const data = await response.json();
-      
-      // Mock response
-      const data = {
-        name: 'Yasir Akhlaque',
-        email: 'yasirakhlaque@gmail.com',
-        phoneNumber: '9876543210',
-        address: 'New Delhi, India',
-        profilePicture: 'https://via.placeholder.com/150'
-      };
-      
-      setUser(data);
-      setPreviewImage(data.profilePicture);
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-      setMessage({ text: 'Failed to load profile data', type: 'error' });
-    } finally {
+    // Use the currentUser from auth context
+    if (currentUser) {
+      setUser({
+        name: currentUser.name || '',
+        email: currentUser.email || '',
+        phoneNumber: currentUser.phoneNumber || '',
+        address: currentUser.address || '',
+        profilePicture: currentUser.profilePicture || null
+      });
+      setPreviewImage(currentUser.profilePicture || null);
       setIsLoading(false);
     }
-  };
+  }, [currentUser]);
   
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUser(prev => ({ ...prev, [name]: value }));
+  };
+  
+  const handlePasswordInputChange = (e) => {
+    const { name, value } = e.target;
+    setPasswordData(prev => ({ ...prev, [name]: value }));
+    // Clear error when typing
+    if (passwordErrors[name]) {
+      setPasswordErrors(prev => ({ ...prev, [name]: '' }));
+    }
   };
   
   const handleImageClick = () => {
@@ -93,35 +98,85 @@ export default function Profile() {
     setMessage({ text: '', type: '' });
     
     try {
-      // Simulate API call
-      // In production:
-      // const formData = new FormData();
-      // formData.append('name', user.name);
-      // formData.append('email', user.email);
-      // formData.append('phoneNumber', user.phoneNumber);
-      // formData.append('address', user.address);
-      // if (fileInputRef.current.files[0]) {
-      //   formData.append('profilePicture', fileInputRef.current.files[0]);
-      // }
-      // 
-      // const response = await fetch('/api/user/profile', {
-      //   method: 'PUT',
-      //   body: formData
-      // });
-      // const data = await response.json();
+      // Using the updateProfile from auth context
+      const formData = {
+        name: user.name,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        address: user.address
+      };
       
-      // Simulate delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // If we have a new image, we would handle file upload here
+      // For now, assuming profilePicture is a URL string
+      if (previewImage && previewImage !== currentUser.profilePicture) {
+        formData.profilePicture = previewImage;
+      }
       
-      setMessage({ text: 'Profile updated successfully!', type: 'success' });
-      // Update local state with the "response"
-      setUser(prev => ({
-        ...prev,
-        profilePicture: previewImage
-      }));
+      const success = await updateProfile(formData);
+      
+      if (success) {
+        setMessage({ text: 'Profile updated successfully!', type: 'success' });
+      } else {
+        setMessage({ text: 'Failed to update profile', type: 'error' });
+      }
     } catch (error) {
       console.error('Error updating profile:', error);
       setMessage({ text: 'Failed to update profile', type: 'error' });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+  
+  const validatePasswordForm = () => {
+    const errors = {};
+    
+    if (!passwordData.currentPassword) {
+      errors.currentPassword = 'Current password is required';
+    }
+    
+    if (!passwordData.newPassword) {
+      errors.newPassword = 'New password is required';
+    } else if (passwordData.newPassword.length < 6) {
+      errors.newPassword = 'New password must be at least 6 characters';
+    }
+    
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      errors.confirmPassword = 'Passwords do not match';
+    }
+    
+    setPasswordErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+  
+  const handlePasswordSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!validatePasswordForm()) {
+      return;
+    }
+    
+    setIsSaving(true);
+    
+    try {
+      const response = await userService.changePassword({
+        currentPassword: passwordData.currentPassword,
+        newPassword: passwordData.newPassword
+      });
+      
+      if (response.data.success) {
+        toast.success('Password updated successfully');
+        setPasswordData({
+          currentPassword: '',
+          newPassword: '',
+          confirmPassword: ''
+        });
+        setShowPasswordSection(false);
+      } else {
+        toast.error(response.data.message || 'Failed to update password');
+      }
+    } catch (error) {
+      console.error('Error changing password:', error);
+      toast.error(error.response?.data?.message || 'Failed to update password');
     } finally {
       setIsSaving(false);
     }
@@ -250,6 +305,86 @@ export default function Profile() {
               ) : 'Update Profile'}
             </button>
           </form>
+          
+          <div className="profile-section-divider">
+            <span>Security</span>
+          </div>
+          
+          <button 
+            className="toggle-password-section" 
+            onClick={() => setShowPasswordSection(!showPasswordSection)}
+          >
+            <FontAwesomeIcon icon={faKey} />
+            <span>Change Password</span>
+          </button>
+          
+          {showPasswordSection && (
+            <form onSubmit={handlePasswordSubmit} className="profile-form password-form">
+              <div className="form-group">
+                <div className="input-icon">
+                  <FontAwesomeIcon icon={faKey} />
+                </div>
+                <input
+                  type="password"
+                  name="currentPassword"
+                  value={passwordData.currentPassword}
+                  onChange={handlePasswordInputChange}
+                  placeholder="Current Password"
+                  className={passwordErrors.currentPassword ? 'error' : ''}
+                />
+                {passwordErrors.currentPassword && (
+                  <div className="error-message">{passwordErrors.currentPassword}</div>
+                )}
+              </div>
+              
+              <div className="form-group">
+                <div className="input-icon">
+                  <FontAwesomeIcon icon={faKey} />
+                </div>
+                <input
+                  type="password"
+                  name="newPassword"
+                  value={passwordData.newPassword}
+                  onChange={handlePasswordInputChange}
+                  placeholder="New Password"
+                  className={passwordErrors.newPassword ? 'error' : ''}
+                />
+                {passwordErrors.newPassword && (
+                  <div className="error-message">{passwordErrors.newPassword}</div>
+                )}
+              </div>
+              
+              <div className="form-group">
+                <div className="input-icon">
+                  <FontAwesomeIcon icon={faKey} />
+                </div>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={passwordData.confirmPassword}
+                  onChange={handlePasswordInputChange}
+                  placeholder="Confirm New Password"
+                  className={passwordErrors.confirmPassword ? 'error' : ''}
+                />
+                {passwordErrors.confirmPassword && (
+                  <div className="error-message">{passwordErrors.confirmPassword}</div>
+                )}
+              </div>
+              
+              <button 
+                type="submit" 
+                className="update-profile-btn" 
+                disabled={isSaving}
+              >
+                {isSaving ? (
+                  <>
+                    <FontAwesomeIcon icon={faSpinner} spin />
+                    <span>Updating Password...</span>
+                  </>
+                ) : 'Update Password'}
+              </button>
+            </form>
+          )}
         </div>
       </div>
     </div>

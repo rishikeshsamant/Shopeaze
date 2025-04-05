@@ -5,7 +5,7 @@ import User from "../models/user.model.js";
 
 dotenv.config();
 
-const authMiddleware = async (req, res, next) => {
+export const auth = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
     const token = authHeader?.startsWith("Bearer ")
@@ -32,5 +32,3 @@ const authMiddleware = async (req, res, next) => {
     return res.status(401).json({ message: "Invalid or expired token." });
   }
 };
-
-export default authMiddleware;

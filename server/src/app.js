@@ -10,10 +10,13 @@ import settingsRoutes from "./routes/settings.routes.js";
 
 const app = express();
 
+// Remove quotes from CORS_ORIGIN if they exist
+const corsOrigin = process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.replace(/"/g, '') : "http://localhost:5173";
+
 // CORS setup
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || "http://localhost:3000",
+    origin: corsOrigin,
     credentials: true,
   })
 );
