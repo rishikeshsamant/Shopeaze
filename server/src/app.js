@@ -22,7 +22,7 @@ app.use(
 app.use(express.json());
 
 // API Routes
-app.use("/api/users", userRoutes);
+app.use("/api/user", userRoutes);
 app.use("/api/customers", customerRoutes);
 app.use("/api/items", itemRoutes);
 app.use("/api/invoices", invoiceRoutes);
