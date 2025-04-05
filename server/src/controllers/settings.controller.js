@@ -22,7 +22,7 @@ export const getSettings = async (req, res) => {
   }
 };
 
-// Get company info (subset of settings)
+
 export const getCompanyInfo = async (req, res) => {
   try {
     const settings = await Settings.findOne({ user: req.user.id });
@@ -31,7 +31,7 @@ export const getCompanyInfo = async (req, res) => {
       return res.status(404).json({ message: "Settings not found" });
     }
     
-    // Extract just the company related fields
+    
     const companyInfo = {
       businessName: settings.businessName,
       logo: settings.logo,
@@ -46,7 +46,7 @@ export const getCompanyInfo = async (req, res) => {
   }
 };
 
-// Update company info
+
 export const updateCompanyInfo = async (req, res) => {
   try {
     const { businessName, logo, country, address, language } = req.body;
@@ -57,7 +57,7 @@ export const updateCompanyInfo = async (req, res) => {
       { new: true, upsert: true }
     );
     
-    // Return just the updated company info
+    
     const companyInfo = {
       businessName: settings.businessName,
       logo: settings.logo,
@@ -72,7 +72,7 @@ export const updateCompanyInfo = async (req, res) => {
   }
 };
 
-// Get invoice settings (future expansion)
+
 export const getInvoiceSettings = async (req, res) => {
   try {
     const settings = await Settings.findOne({ user: req.user.id });
@@ -81,8 +81,7 @@ export const getInvoiceSettings = async (req, res) => {
       return res.status(404).json({ message: "Settings not found" });
     }
     
-    // For now, just return the home page setting
-    // This can be expanded later with more invoice-specific settings
+    
     const invoiceSettings = {
       home: settings.home
     };
@@ -93,7 +92,7 @@ export const getInvoiceSettings = async (req, res) => {
   }
 };
 
-// Update invoice settings
+
 export const updateInvoiceSettings = async (req, res) => {
   try {
     const { home } = req.body;
@@ -104,7 +103,7 @@ export const updateInvoiceSettings = async (req, res) => {
       { new: true, upsert: true }
     );
     
-    // Return just the invoice settings
+    
     const invoiceSettings = {
       home: settings.home
     };

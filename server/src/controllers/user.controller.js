@@ -2,19 +2,19 @@ import User from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-// Register new user
+
 export const registerUser = async (req, res) => {
   try {
     const { name, email, password, phoneNumber, address, profilePicture } = req.body;
 
-    // Basic validation
+    
     if (!name || !email || !password) {
       return res.status(400).json({ 
         message: "Name, email, and password are required fields"
       });
     }
 
-    // Check if user already exists
+    
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ 
@@ -22,10 +22,10 @@ export const registerUser = async (req, res) => {
       });
     }
 
-    // Hash password
+    
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create new user
+    
     const newUser = new User({
       name,
       email,
@@ -35,10 +35,10 @@ export const registerUser = async (req, res) => {
       profilePicture: profilePicture || '',
     });
 
-    // Save user to database
+    
     await newUser.save();
     
-    // Return success without sending password
+    
     const userResponse = newUser.toObject();
     delete userResponse.password;
     
@@ -57,7 +57,7 @@ export const registerUser = async (req, res) => {
   }
 };
 
-// Login user
+
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -79,7 +79,7 @@ export const loginUser = async (req, res) => {
   }
 };
 
-// Get profile of logged-in user
+
 export const getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
@@ -89,7 +89,7 @@ export const getProfile = async (req, res) => {
   }
 };
 
-// Get all users
+
 export const getAllUsers = async (req, res) => {
   try {
     const users = await User.find();
@@ -99,7 +99,7 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
-// Get user by ID
+
 export const getUserById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -111,17 +111,15 @@ export const getUserById = async (req, res) => {
   }
 };
 
-// Update user (including profile picture)
+
 export const updateUser = async (req, res) => {
   try {
     let userId;
     
-    // Check if this is a profile update (from auth middleware) or update by ID
+    
     if (req.user) {
-      // This is a profile update from an authenticated user
       userId = req.user._id;
     } else if (req.params.id) {
-      // This is an update by ID
       userId = req.params.id;
     } else {
       return res.status(400).json({ message: "User ID is required" });
@@ -146,13 +144,13 @@ export const updateUser = async (req, res) => {
   }
 };
 
-// Change password
+
 export const changePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
     const userId = req.user._id;
 
-    // Validation
+    
     if (!currentPassword || !newPassword) {
       return res.status(400).json({
         success: false,
@@ -160,7 +158,7 @@ export const changePassword = async (req, res) => {
       });
     }
 
-    // Get user with password
+    
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({
@@ -169,7 +167,7 @@ export const changePassword = async (req, res) => {
       });
     }
 
-    // Verify current password
+    
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
       return res.status(400).json({
@@ -178,10 +176,10 @@ export const changePassword = async (req, res) => {
       });
     }
 
-    // Hash new password
+    
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    // Update password
+    
     user.password = hashedPassword;
     await user.save();
 
