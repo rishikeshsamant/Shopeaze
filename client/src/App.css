@@ -350,3 +350,252 @@ body.dark-theme {
   opacity: 0;
   transition: opacity 300ms;
 }
+
+/* Authentication Pages */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100vw;
+  padding: 20px;
+}
+
+.auth-form-container {
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  width: 100%;
+  max-width: 450px;
+  text-align: center;
+}
+
+.auth-logo {
+  margin-bottom: 20px;
+}
+
+.auth-logo img {
+  max-width: 180px;
+  height: auto;
+}
+
+.auth-form-container h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: var(--text-color);
+}
+
+.auth-subtitle {
+  color: var(--text-secondary);
+  margin-bottom: 25px;
+  font-size: 14px;
+}
+
+.auth-form {
+  text-align: left;
+}
+
+.auth-form .form-group {
+  margin-bottom: 20px;
+}
+
+.auth-form label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.auth-form input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  font-size: 14px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.auth-form input:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.2);
+}
+
+.auth-form input.error {
+  border-color: var(--danger-color);
+}
+
+.error-message {
+  color: var(--danger-color);
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.auth-button {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.auth-button:hover {
+  background-color: var(--primary-hover);
+}
+
+.auth-button:disabled {
+  background-color: var(--disabled-color);
+  cursor: not-allowed;
+}
+
+.auth-links {
+  margin-top: 20px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.auth-links a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-links a:hover {
+  text-decoration: underline;
+}
+
+.form-footer {
+  margin-top: 25px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 18px;
+  color: var(--text-color);
+}
+
+.nav-link.logout-link {
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  text-align: left;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  margin-top: auto;
+  text-decoration: none;
+}
+
+.nav-link.logout-link:hover {
+  background-color: var(--hover-bg);
+}
+
+.mobile-user {
+  display: flex;
+  align-items: center;
+}
+
+.mobile-user a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 500;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Responsive styles for auth pages */
+@media (max-width: 480px) {
+  .auth-form-container {
+    padding: 20px;
+  }
+  
+  .auth-logo img {
+    max-width: 150px;
+  }
+}
+
+/* Mobile Header Actions */
+.mobile-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mobile-logout-btn {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 18px;
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  transition: background-color 0.3s;
+}
+
+.mobile-logout-btn:hover {
+  background-color: var(--hover-bg);
+}
+
+.dark-theme .mobile-logout-btn {
+  color: var(--text-color-dark);
+}
+
+/* Mobile Nav Link Logout Button */
+.mobile-nav-link.Settings {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 10px;
+  color: var(--text-color);
+  text-decoration: none;
+  transition: color 0.3s;
+  cursor: pointer;
+}
+
+.mobile-nav-link.Settings svg {
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+.mobile-nav-link.Settings span {
+  font-size: 12px;
+}
+
+.dark-theme .mobile-nav-link.Settings {
+  color: var(--text-color-dark);
+}
