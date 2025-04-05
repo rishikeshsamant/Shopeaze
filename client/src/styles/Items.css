@@ -539,3 +539,68 @@
 .delete-btn:hover {
   background-color: rgba(211, 47, 47, 0.2);
 }
+
+/* Add the following styles to the existing file */
+
+.category-form-group {
+  position: relative;
+}
+
+.category-selection {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.category-selection select {
+  flex: 1;
+}
+
+.category-selection select.no-categories {
+  border-color: #e74c3c;
+}
+
+.add-category-btn {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.add-category-btn:hover {
+  background-color: #2980b9;
+}
+
+.category-helper-text {
+  color: #e74c3c;
+  font-size: 0.8rem;
+  margin-top: 5px;
+}
+
+.create-first-category-btn {
+  background: linear-gradient(90deg, #896790, #dfbbda);
+  color: white;
+  border: none;
+  width: 100%;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.create-first-category-btn:hover {
+  box-shadow: 0 6px 15px rgba(137, 103, 144, 0.25);
+  transform: translateY(-2px);
+}

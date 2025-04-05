@@ -4,6 +4,7 @@ import customerService from './customerService';
 import itemService from './itemService';
 import invoiceService from './invoiceService';
 import settingsService from './settingsService';
+import categoryService from './categoryService';
 
 export {
   axiosClient,
@@ -12,4 +13,5 @@ export {
   itemService,
   invoiceService,
   settingsService,
+  categoryService,
 }; 

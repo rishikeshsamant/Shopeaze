@@ -13,11 +13,17 @@ import {
   faImage,
   faLayerGroup
 } from '@fortawesome/free-solid-svg-icons';
+import itemService from '../services/api/itemService';
+import categoryService from '../services/api/categoryService';
+import CategoryModal from '../Components/CategoryModal';
+import { toast } from 'react-toastify';
 
 const Items = () => {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
@@ -28,51 +34,6 @@ const Items = () => {
     productImage: '',
   });
 
-  // Categories for dropdown (would come from API in production)
-  const categories = [
-    { _id: "1", name: "Groceries" },
-    { _id: "2", name: "Electronics" },
-    { _id: "3", name: "Clothing" },
-    { _id: "4", name: "Home & Kitchen" }
-  ];
-
-  // Dummy data aligned with backend schema
-  const dummyProducts = [
-    {
-      _id: '1',
-      name: 'Smartphone',
-      description: 'Latest model with high-end features',
-      price: 15000,
-      category: { _id: "2", name: "Electronics" },
-      subCategory: 'Mobile Phones',
-      productImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfCddtA1b0LgnZ37Nvto8dIhu5vxhIxvxIJw&s',
-      createdAt: '2023-10-15T10:30:00Z',
-      updatedAt: '2023-10-15T10:30:00Z'
-    },
-    {
-      _id: '2',
-      name: 'Cotton T-Shirt',
-      description: 'Comfortable cotton t-shirt, available in multiple colors',
-      price: 499,
-      category: { _id: "3", name: "Clothing" },
-      subCategory: 'T-Shirts',
-      productImage: 'https://gogirgit.com/cdn/shop/products/unisex-men-printed-graphic-golden-yellow-cotton-tshirt-summer-design-gogirgit_1800x.jpg?v=1662573030',
-      createdAt: '2023-09-20T14:15:00Z',
-      updatedAt: '2023-09-20T14:15:00Z'
-    },
-    {
-      _id: '3',
-      name: 'Rice (5kg)',
-      description: 'Premium basmati rice',
-      price: 350,
-      category: { _id: "1", name: "Groceries" },
-      subCategory: 'Rice & Grains',
-      productImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvJlWgt2pYOKkyJyC87ybiAV56fmylG05JZA&s',
-      createdAt: '2023-08-12T09:45:00Z',
-      updatedAt: '2023-08-12T09:45:00Z'
-    },
-  ];
-
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
@@ -81,20 +42,30 @@ const Items = () => {
     }).format(value);
   };
 
+  const fetchCategories = async () => {
+    try {
+      const response = await categoryService.getAllCategories();
+      setCategories(response.data);
+    } catch (error) {
+      toast.error('Error fetching categories');
+      setCategories([]);
+    }
+  };
+
   const fetchProducts = async () => {
     try {
-      // Simulating API call
-      setTimeout(() => {
-        setProducts(dummyProducts);
-        setLoading(false);
-      }, 500); // simulate loading time
+      setLoading(true);
+      const response = await itemService.getAllItems();
+      setProducts(response.data);
+      setLoading(false);
     } catch (error) {
-      alert('Error fetching products');
+      toast.error('Error fetching products');
       setLoading(false);
     }
   };
 
   useEffect(() => {
+    fetchCategories();
     fetchProducts();
   }, []);
 
@@ -103,11 +74,11 @@ const Items = () => {
       setSelectedProduct(product);
       setFormData({
         name: product.name,
-        description: product.description,
+        description: product.description || '',
         price: product.price,
-        category: product.category._id,
-        subCategory: product.subCategory,
-        productImage: product.productImage,
+        category: product.category._id || product.category,
+        subCategory: product.subCategory || '',
+        productImage: product.productImage || '',
       });
     } else {
       setSelectedProduct(null);
@@ -128,6 +99,32 @@ const Items = () => {
     setSelectedProduct(null);
   };
 
+  const handleOpenCategoryModal = () => {
+    setShowCategoryModal(true);
+  };
+
+  const handleCloseCategoryModal = () => {
+    setShowCategoryModal(false);
+  };
+
+  const handleSaveCategory = async (categoryData) => {
+    try {
+      const response = await categoryService.createCategory(categoryData);
+      toast.success('Category created successfully');
+      
+      // Refresh categories and update form to select the new category
+      await fetchCategories();
+      setFormData(prev => ({
+        ...prev,
+        category: response.data._id
+      }));
+      
+      handleCloseCategoryModal();
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Error creating category');
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -138,53 +135,46 @@ const Items = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Check if a category is selected
+    if (!formData.category) {
+      toast.error('Please select or create a category');
+      return;
+    }
+    
     try {
-      const categoryObj = categories.find(cat => cat._id === formData.category);
+      const productData = {
+        name: formData.name,
+        description: formData.description,
+        price: parseFloat(formData.price),
+        category: formData.category,
+        subCategory: formData.subCategory,
+        productImage: formData.productImage,
+      };
       
       if (selectedProduct) {
-        const updated = products.map((p) =>
-          p._id === selectedProduct._id ? { 
-            ...p,
-            name: formData.name,
-            description: formData.description,
-            price: parseFloat(formData.price),
-            category: categoryObj,
-            subCategory: formData.subCategory,
-            productImage: formData.productImage,
-            updatedAt: new Date().toISOString()
-          } : p
-        );
-        setProducts(updated);
-        alert('Product updated successfully');
+        await itemService.updateItem(selectedProduct._id, productData);
+        toast.success('Product updated successfully');
       } else {
-        const newProduct = {
-          _id: Date.now().toString(),
-          name: formData.name,
-          description: formData.description,
-          price: parseFloat(formData.price),
-          category: categoryObj,
-          subCategory: formData.subCategory,
-          productImage: formData.productImage,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        };
-        setProducts((prev) => [...prev, newProduct]);
-        alert('Product created successfully');
+        await itemService.createItem(productData);
+        toast.success('Product created successfully');
       }
+      
       handleCloseModal();
+      fetchProducts(); // Refresh the products list
     } catch (error) {
-      alert('Error saving product');
+      toast.error(error.response?.data?.message || 'Error saving product');
     }
   };
 
   const handleDelete = async (product) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
       try {
-        const updated = products.filter((p) => p._id !== product._id);
-        setProducts(updated);
-        alert('Product deleted successfully');
+        await itemService.deleteItem(product._id);
+        toast.success('Product deleted successfully');
+        fetchProducts(); // Refresh the products list
       } catch (error) {
-        alert('Error deleting product');
+        toast.error(error.response?.data?.message || 'Error deleting product');
       }
     }
   };
@@ -208,56 +198,61 @@ const Items = () => {
       </div>
 
       <div className="products-grid">
-        {products.map((product) => (
-          <div className="product-card" key={product._id}>
-            <div className="product-card-image">
-              {product.productImage ? (
-                <img src={product.productImage} alt={product.name} />
-              ) : (
-                <div className="product-image-placeholder">
-                  <FontAwesomeIcon icon={faImage} />
-                </div>
-              )}
-            </div>
-            {/* <div className="product-blur"></div> */}
-            <div className="product-card-content">
-              <h3 className="product-name">{product.name}</h3>
-              <p className="product-description">{product.description}</p>
-              <div className="product-details">
-                <div className="product-price">
-                  <FontAwesomeIcon icon={faMoneyBillWave} />
-                  <span>{formatCurrency(product.price)}</span>
-                </div>
-                <div className="product-category">
-                  <FontAwesomeIcon icon={faLayerGroup} />
-                  <span>{product.category.name}</span>
-                  {product.subCategory && (
-                    <span className="product-subcategory">{product.subCategory}</span>
-                  )}
+        {products.length === 0 ? (
+          <div className="no-products">
+            <p>No products found. Add your first product!</p>
+          </div>
+        ) : (
+          products.map((product) => (
+            <div className="product-card" key={product._id}>
+              <div className="product-card-image">
+                {product.productImage ? (
+                  <img src={product.productImage} alt={product.name} />
+                ) : (
+                  <div className="product-image-placeholder">
+                    <FontAwesomeIcon icon={faImage} />
+                  </div>
+                )}
+              </div>
+              <div className="product-card-content">
+                <h3 className="product-name">{product.name}</h3>
+                <p className="product-description">{product.description}</p>
+                <div className="product-details">
+                  <div className="product-price">
+                    <FontAwesomeIcon icon={faMoneyBillWave} />
+                    <span>{formatCurrency(product.price)}</span>
+                  </div>
+                  <div className="product-category">
+                    <FontAwesomeIcon icon={faLayerGroup} />
+                    <span>{product.category?.name || 'Category'}</span>
+                    {product.subCategory && (
+                      <span className="product-subcategory">{product.subCategory}</span>
+                    )}
+                  </div>
                 </div>
               </div>
+              <div className="product-card-actions">
+                <button
+                  className="btn-icon edit-btn"
+                  onClick={() => handleOpenModal(product)}
+                  title="Edit"
+                >
+                  <FontAwesomeIcon icon={faEdit} />
+                </button>
+                <button
+                  className="btn-icon delete-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete(product);
+                  }}
+                  title="Delete"
+                >
+                  <FontAwesomeIcon icon={faTrash} />
+                </button>
+              </div>
             </div>
-            <div className="product-card-actions">
-              <button
-                className="btn-icon edit-btn"
-                onClick={() => handleOpenModal(product)}
-                title="Edit"
-              >
-                <FontAwesomeIcon icon={faEdit} />
-              </button>
-              <button
-                className="btn-icon delete-btn"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDelete(product);
-                }}
-                title="Delete"
-              >
-                <FontAwesomeIcon icon={faTrash} />
-              </button>
-            </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
 
       {showModal && (
@@ -294,24 +289,51 @@ const Items = () => {
                 ></textarea>
               </div>
               <div className="form-row">
-                <div className="form-group">
+                <div className="form-group category-form-group">
                   <label htmlFor="category">
                     Category*
                   </label>
-                  <select
-                    id="category"
-                    name="category"
-                    value={formData.category}
-                    onChange={handleChange}
-                    required
-                  >
-                    <option value="">Select a category</option>
-                    {categories.map(category => (
-                      <option key={category._id} value={category._id}>
-                        {category.name}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="category-selection">
+                    {categories.length === 0 ? (
+                      <button 
+                        type="button" 
+                        className="create-first-category-btn"
+                        onClick={handleOpenCategoryModal}
+                      >
+                        <FontAwesomeIcon icon={faPlus} /> Create Your First Category
+                      </button>
+                    ) : (
+                      <>
+                        <select
+                          id="category"
+                          name="category"
+                          value={formData.category}
+                          onChange={handleChange}
+                          required
+                        >
+                          <option value="">Select a category</option>
+                          {categories.map(category => (
+                            <option key={category._id} value={category._id}>
+                              {category.name}
+                            </option>
+                          ))}
+                        </select>
+                        <button 
+                          type="button" 
+                          className="add-category-btn"
+                          onClick={handleOpenCategoryModal}
+                          title="Add new category"
+                        >
+                          <FontAwesomeIcon icon={faPlus} />
+                        </button>
+                      </>
+                    )}
+                  </div>
+                  {categories.length > 0 && !formData.category && (
+                    <div className="category-helper-text">
+                      Please select a category or create a new one.
+                    </div>
+                  )}
                 </div>
                 <div className="form-group">
                   <label htmlFor="subCategory">
@@ -368,6 +390,14 @@ const Items = () => {
           </div>
         </div>
       )}
+
+      <CategoryModal
+        isOpen={showCategoryModal}
+        onClose={handleCloseCategoryModal}
+        onSave={handleSaveCategory}
+        initialData={null}
+        fromItemForm={true}
+      />
     </div>
   );
 };
