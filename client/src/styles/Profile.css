@@ -1,0 +1,217 @@
+/* Profile Page Styling */
+
+:root {
+  --primary-color: #896790;
+  --primary-light: #bfadcc;
+  --primary-lighter: #dfbbda;
+  --primary-lightest: #f2bae4;
+  --primary-bg: #ffe1f5;
+  --success-color: #4caf50;
+  --error-color: #f44336;
+  --text-dark: #333;
+  --text-light: #666;
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --border-radius: 8px;
+}
+
+/* Profile Page Layout */
+.profile-page {
+  max-width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.profile-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: 20px;
+}
+
+@media (min-width: 768px) {
+  .profile-content {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+/* Profile Message */
+.profile-message {
+  padding: 12px 16px;
+  border-radius: var(--border-radius, 8px);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 800px;
+}
+
+.profile-message.success {
+  background-color: rgba(76, 175, 80, 0.1);
+  color: var(--success-color, #4caf50);
+  border: 1px solid var(--success-color, #4caf50);
+}
+
+.profile-message.error {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: var(--error-color, #f44336);
+  border: 1px solid var(--error-color, #f44336);
+}
+
+/* Profile Image Section */
+.profile-image-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 250px;
+  margin-bottom: 30px;
+}
+
+@media (min-width: 768px) {
+  .profile-image-section {
+    width: 40%;
+    margin-right: 40px;
+    margin-bottom: 0;
+  }
+}
+
+.profile-image-container {
+  width: 180px;
+  height: 180px;
+  position: relative;
+  cursor: pointer;
+  margin-bottom: 15px;
+  border-radius: 40px;
+  overflow: hidden;
+}
+
+.profile-placeholder svg {
+  width: 100%;
+  height: 100%;
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 40px;
+  border: 2px solid var(--primary-lighter, #dfbbda);
+}
+
+.image-input {
+  display: none;
+}
+
+.profile-upload-hint {
+  color: var(--text-light, #666);
+  font-size: 14px;
+  text-align: center;
+}
+
+/* Profile Form Container */
+.profile-form-container {
+  flex: 1;
+  width: 100%;
+  max-width: 600px;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.form-group {
+  position: relative;
+  width: 100%;
+}
+
+.input-prefix {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  z-index: 1;
+}
+
+.textarea-prefix {
+  top: 24px;
+  transform: none;
+}
+
+.profile-form input,
+.profile-form textarea {
+  width: 100%;
+  padding: 15px 15px 15px 45px;
+  border: 1px solid var(--border-color, #e0e0e0);
+  border-radius: var(--border-radius, 8px);
+  font-size: 16px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  background-color: var(--card-bg, #fff);
+  color: var(--text-color, #333);
+}
+
+.profile-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.profile-form input:focus,
+.profile-form textarea:focus {
+  outline: none;
+  border-color: var(--primary-color, #896790);
+  box-shadow: 0 0 0 2px rgba(137, 103, 144, 0.1);
+}
+
+.update-profile-btn {
+  background-color: var(--primary-color, #896790);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius, 8px);
+  padding: 15px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  text-transform: uppercase;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.update-profile-btn:hover {
+  background-color: var(--primary-light, #775980);
+}
+
+.update-profile-btn:disabled {
+  background-color: var(--primary-light, #bfadcc);
+  cursor: not-allowed;
+}
+
+/* Loading State */
+.profile-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  gap: 20px;
+  color: var(--text-color, #333);
+}
+
+.loading-icon {
+  font-size: 40px;
+  color: var(--primary-color, #896790);
+}
+
+.profile-loading p {
+  color: var(--text-color, #333);
+}
