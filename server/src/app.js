@@ -13,7 +13,9 @@ import dashboardRoutes from "./routes/dashboard.routes.js";
 const app = express();
 
 
-const corsOrigin = process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.replace(/"/g, '') : "http://localhost:5173";
+const corsOrigin = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.replace(/"/g, "")
+  : "https://shopeaze-frontend.onrender.com/";
 
 
 app.use(

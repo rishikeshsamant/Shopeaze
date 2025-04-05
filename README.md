@@ -16,8 +16,11 @@ It’s a system that hasn’t changed in decades. And almost every small busines
 - What’s selling well?
 - Who are my repeat customers?
 
-But the problem is—setting up complex POS systems, buying expensive computers, using barcode scanners, or juggling between complicated apps and Excel sheets just isn’t realistic for them. These business owners don’t need fancy dashboards filled with complex charts. They need simplicity.
+But the problem is—setting up complex POS systems, buying expensive computers, using barcode scanners, or juggling between complicated apps and Excel sheets just isn’t realistic for them. Their earning is low and schedule is busy but their business is important to same level.These business owners don’t need fancy dashboards filled with complex charts. They need simplicity.
 
+## 🛠️ How we are solving that?
+
+### Shopeaze — The Ultimate POS on Your Fingertips
 
 That’s where we come in. We’re building a simple, lightweight web app that works right out of the box. No setup headaches. No tech jargon. Just open it up and:
 
@@ -29,10 +32,6 @@ That’s where we come in. We’re building a simple, lightweight web app that w
 Get insights — all in one place, on your fingertips
 
 And to be clear — we’re not just another app for cash flow tracking or stock management. We're reimagining POS for small businesses, from billing to customer management to analytics — all made effortless, intuitive, and accessible.
-
-## 🛠️ How we are solving that?
-
-### Shopeaze — The Ultimate POS on Your Fingertips
 
 No more juggling between multiple apps.  No need for expensive setups, barcode scanners, or confusing software. **Shopeaze** is a simple app made for the **simple men**. Just create an account, set up your profile, add your items, enter customer details — **and you're ready to bill.** Generate invoices, track sales, send or manage bills — all from one easy-to-use platform.
 
@@ -46,3 +45,5 @@ Because we believe:
 
 > **"Dukaan chhoti hai toh kya hua, paisa toh tab bhi zaroori hai —  
 Kitna, kab, kaise — sab manage karo Shopeaze pe, ab sab kuch aasaan hai!"**
+
+
