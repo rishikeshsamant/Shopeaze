@@ -401,6 +401,59 @@ const Invoice = () => {
     return matchesSearch && matchesStatus;
   });
 
+  // Handle customer selection to auto-fill customer details
+  const handleCustomerChange = (e) => {
+    const customerId = e.target.value;
+    
+    // Update the customer ID first
+    setFormData(prev => ({
+      ...prev,
+      customer: customerId
+    }));
+    
+    // If a customer is selected, auto-fill their details
+    if (customerId) {
+      const selectedCustomer = customers.find(c => c._id === customerId);
+      if (selectedCustomer) {
+        setFormData(prev => ({
+          ...prev,
+          customer: customerId,
+          email: selectedCustomer.email || '',
+          phone: selectedCustomer.phoneNumber || '',
+          billingAddress: selectedCustomer.billingAddress || '',
+          shippingAddress: selectedCustomer.shippingAddress || ''
+        }));
+        
+        // Apply highlight animation to auto-filled fields
+        const fieldsToHighlight = ['email', 'phone', 'billingAddress', 'shippingAddress'];
+        fieldsToHighlight.forEach(field => {
+          const elements = document.getElementsByName(field);
+          if (elements.length > 0) {
+            const element = elements[0];
+            // Reset animation by removing and re-adding class
+            element.classList.remove('autofill-highlight');
+            setTimeout(() => {
+              element.classList.add('autofill-highlight');
+            }, 10);
+          }
+        });
+        
+        // Show a success message
+        toast.success("Customer details loaded successfully");
+      }
+    } else {
+      // Clear customer-related fields if no customer is selected
+      setFormData(prev => ({
+        ...prev,
+        customer: '',
+        email: '',
+        phone: '',
+        billingAddress: '',
+        shippingAddress: ''
+      }));
+    }
+  };
+
   if (loading && !invoices.length) {
     return <div className="loading">Loading invoices...</div>;
   }
@@ -570,7 +623,7 @@ const Invoice = () => {
                     <select 
                       name="customer" 
                       value={formData.customer || ''}
-                      onChange={handleInputChange}
+                      onChange={handleCustomerChange}
                       required
                     >
                       <option value="">Select a customer</option>
