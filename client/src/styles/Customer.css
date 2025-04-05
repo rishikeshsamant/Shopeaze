@@ -31,11 +31,38 @@
     background: var(--current-page-bg);
 }
 
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
 .customer-page h1 {
     font-size: 28px;
     font-weight: 700;
     color: #896790;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0;
+}
+
+.add-customer-btn {
+    background: linear-gradient(45deg, #dfbbda, #f2bae4);
+    color: #4a3a51;
+    border: none;
+    border-radius: 10px;
+    padding: 0.75rem 1.25rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(137, 103, 144, 0.2);
+}
+
+.add-customer-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(137, 103, 144, 0.25);
 }
 
 .customer-grid {
@@ -136,6 +163,11 @@
     color: #ed6c02;
 }
 
+.status.new {
+    background: rgba(25, 118, 210, 0.1);
+    color: #1976d2;
+}
+
 .status-badge.pending {
     background-color: rgba(237, 108, 2, 0.1);
     color: #ed6c02;
@@ -198,30 +230,31 @@
     position: absolute;
     top: 1rem;
     right: 1rem;
-    background: rgba(211, 47, 47, 0.1);
-    color: #d32f2f;
+    background: none;
     border: none;
-    border-radius: 50%;
-    width: 36px;
-    height: 36px;
-    font-size: 1.2rem;
+    color: #896790;
     cursor: pointer;
+    transition: all 0.3s ease;
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
     display: flex;
-    align-items: center;
     justify-content: center;
-    transition: all 0.3s;
+    align-items: center;
 }
 
 .close-btn:hover {
-    background: rgba(211, 47, 47, 0.2);
-    transform: rotate(90deg);
+    background: #ffe1f5;
+    color: #4a3a51;
 }
 
 .modal-content.glass {
-    background: var(--current-modal-bg);
-    color: var(--current-text);
-    box-shadow: 0 8px 30px rgba(137, 103, 144, 0.3);
-    animation: slideUp 0.3s ease;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+}
+
+.dark-theme .modal-content.glass {
+    background: rgba(35, 27, 41, 0.8);
 }
 
 @keyframes slideUp {
@@ -237,45 +270,50 @@
 
 .modal-header {
     display: flex;
-    align-items: center;
-    gap: 1.5rem;
+    gap: 1rem;
     margin-bottom: 2rem;
+    align-items: center;
+    animation: slideUp 0.3s ease-out forwards;
 }
 
 .modal-avatar {
-    background: linear-gradient(45deg, #896790, #dfbbda);
+    background: linear-gradient(45deg, #dfbbda, #f2bae4);
+    padding: 1.2rem;
     border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    font-size: 1.4rem;
-    color: white;
+    font-size: 1.5rem;
+    color: #896790;
+    box-shadow: 0 4px 8px rgba(137, 103, 144, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 10px rgba(137, 103, 144, 0.2);
+}
+
+.modal-header-info {
+    flex: 1;
 }
 
 .modal-header-info h2 {
-    font-size: 22px;
-    font-weight: 600;
+    font-size: 24px;
+    font-weight: 700;
     color: #4a3a51;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.5rem;
 }
 
 .modal-header-info p {
-    font-size: 14px;
+    font-size: 16px;
     color: #896790;
+    margin: 0.3rem 0;
 }
 
 .status-badge {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    padding: 0.4rem 1rem;
+    padding: 0.5rem 1rem;
     border-radius: 12px;
-    font-size: 0.85rem;
     font-weight: 600;
-    margin-top: 0.8rem;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
 }
 
 .status-badge.paid {
@@ -295,88 +333,93 @@
 
 .modal-body {
     display: flex;
+    flex-direction: column;
     gap: 2rem;
-    flex-wrap: wrap;
+    animation: slideUp 0.4s ease-out forwards;
+    animation-delay: 0.1s;
 }
 
 .info-section, .purchase-section {
-    flex: 1 1 250px;
+    border-top: 1px solid rgba(137, 103, 144, 0.1);
+    padding-top: 1.5rem;
 }
 
 .info-section h3,
 .purchase-section h3 {
-    margin-bottom: 0.8rem;
-    border-bottom: 1px solid #ffe1f5;
-    padding-bottom: 0.8rem;
     font-size: 18px;
     font-weight: 600;
     color: #896790;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .info-section p {
-    margin-bottom: 0.5rem;
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
+    margin: 0.8rem 0;
 }
 
 .info-section p span:first-child {
-    font-weight: 500;
     color: #896790;
-    font-size: 13px;
-    opacity: 0.8;
-    margin-bottom: 0.3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
 }
 
 .info-section p span:last-child {
     color: #4a3a51;
-    font-size: 15px;
+    font-weight: 500;
 }
 
 .purchase-section ul {
-    padding-left: 1.2rem;
     list-style: none;
+    padding: 0;
 }
 
 .purchase-section ul li {
-    margin-bottom: 1rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid rgba(137, 103, 144, 0.1);
     position: relative;
-    padding-left: 0.5rem;
-    border-left: 2px solid #f2bae4;
 }
 
 .purchase-section ul li::before {
-    content: '';
+    content: "";
+    width: 6px;
+    height: 6px;
+    background: #dfbbda;
     position: absolute;
-    left: -6px;
-    top: 0;
-    width: 10px;
-    height: 10px;
+    left: -15px;
+    top: 50%;
+    transform: translateY(-50%);
     border-radius: 50%;
-    background: #f2bae4;
 }
 
 .invoice-list {
-    background: #fdf7ff;
-    border-radius: 12px;
-    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
     margin-top: 1rem;
 }
 
 .invoice-item {
+    padding: 1rem;
+    background: #fff;
+    border-radius: 12px;
     display: flex;
     justify-content: space-between;
-    padding: 0.8rem;
-    border-bottom: 1px solid #ffe1f5;
-    align-items: center;
+    border: 1px solid #ffe1f5;
 }
 
 .invoice-item:last-child {
-    border-bottom: none;
+    margin-bottom: 1rem;
 }
 
 .invoice-date {
     color: #896790;
-    font-size: 14px;
+    font-size: 0.9rem;
 }
 
 .invoice-amount {
@@ -385,168 +428,321 @@
 }
 
 .add-invoice-btn {
-    display: block;
-    width: 100%;
-    padding: 0.8rem;
-    margin-top: 1.5rem;
+    background: linear-gradient(45deg, #dfbbda, #f2bae4);
+    color: #4a3a51;
     border: none;
-    background: linear-gradient(90deg, #896790, #dfbbda);
-    color: white;
-    border-radius: 12px;
+    border-radius: 10px;
+    padding: 0.75rem 1.25rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
     box-shadow: 0 4px 10px rgba(137, 103, 144, 0.2);
 }
 
 .add-invoice-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(137, 103, 144, 0.3);
+    box-shadow: 0 6px 15px rgba(137, 103, 144, 0.25);
 }
 
-/* Due amount styling */
 .due-amount {
-    color: #d32f2f;
-    font-weight: 600;
+    color: #ed6c02 !important;
+    font-weight: 600 !important;
 }
 
 .dark-theme .due-amount {
-    color: #ff6b6b;
+    color: #f57c00 !important;
 }
 
-/* Transaction card styles for card-based layout */
 .transaction-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1rem;
-  margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .transaction-card {
-  background: var(--current-card-bg, #ffffff);
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(137, 103, 144, 0.08);
-  overflow: hidden;
-  transition: all 0.3s ease;
-  border: 1px solid #ffe1f5;
-  cursor: pointer;
+    background: #fff;
+    border-radius: 12px;
+    padding: 1rem;
+    border: 1px solid #ffe1f5;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .dark-theme .transaction-card {
-  border: 1px solid #4a3a51;
+    background: #231b29;
+    border: 1px solid #4a3a51;
 }
 
 .transaction-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 16px rgba(137, 103, 144, 0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(137, 103, 144, 0.15);
 }
 
 .transaction-card.selected {
-  border: 2px solid #896790;
-  transform: translateY(-3px);
-  box-shadow: 0 6px 16px rgba(137, 103, 144, 0.15);
+    border: 2px solid #dfbbda;
+    box-shadow: 0 6px 15px rgba(137, 103, 144, 0.2);
 }
 
 .transaction-header {
-  background: linear-gradient(to right, #f2bae4, #dfbbda);
-  padding: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .transaction-icon {
-  background: rgba(255, 255, 255, 0.25);
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 1rem;
+    background: linear-gradient(45deg, #dfbbda, #f2bae4);
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4a3a51;
+    font-size: 1rem;
 }
 
 .transaction-amount {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: white;
+    font-weight: 700;
+    color: #4a3a51;
+    font-size: 1.1rem;
 }
 
 .transaction-details {
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.9rem;
 }
 
 .transaction-date, .transaction-method {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-size: 0.9rem;
-  color: #4a3a51;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #896790;
 }
 
 .transaction-notes {
-  font-size: 0.85rem;
-  color: #896790;
-  margin-top: 0.5rem;
-  padding-top: 0.5rem;
-  border-top: 1px dashed #ffe1f5;
-  font-style: italic;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background: #ffe1f5;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: #4a3a51;
 }
 
 .no-transactions {
-  text-align: center;
-  padding: 2rem;
-  color: #896790;
-  background: rgba(137, 103, 144, 0.05);
-  border-radius: 12px;
-  margin-top: 1rem;
+    text-align: center;
+    padding: 2rem;
+    color: #896790;
+    background: rgba(137, 103, 144, 0.05);
+    border-radius: 12px;
+    font-size: 1rem;
 }
 
 .transaction-detail-card {
-  background: rgba(137, 103, 144, 0.05);
-  border-radius: 12px;
-  padding: 1.2rem;
-  margin-top: 1.5rem;
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    border: 1px solid #ffe1f5;
 }
 
 .transaction-detail-content {
-  margin-top: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
 }
 
 .detail-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 0.8rem;
-  border-bottom: 1px solid rgba(137, 103, 144, 0.1);
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid rgba(137, 103, 144, 0.1);
 }
 
 .detail-row.notes {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.5rem;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .detail-label {
-  color: #896790;
-  font-weight: 500;
-  font-size: 0.9rem;
+    color: #896790;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .detail-value {
-  color: #4a3a51;
-  font-size: 0.95rem;
+    color: #4a3a51;
+    font-weight: 500;
 }
 
 .detail-value.highlight {
-  font-weight: 600;
-  color: #896790;
-  font-size: 1.1rem;
+    color: #2e7d32;
+    font-weight: 700;
+}
+
+/* Customer Form Styles */
+.customer-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    color: #896790;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-group input,
+.form-group textarea {
+    padding: 0.75rem;
+    border: 1px solid rgba(137, 103, 144, 0.2);
+    border-radius: 8px;
+    font-size: 1rem;
+    background: var(--current-modal-bg);
+    color: var(--current-text);
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #dfbbda;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(223, 187, 218, 0.2);
+}
+
+.form-group textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.cancel-btn,
+.save-btn,
+.edit-btn,
+.delete-btn {
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.cancel-btn {
+    background: #f5f5f5;
+    color: #896790;
+    border: 1px solid rgba(137, 103, 144, 0.2);
+}
+
+.save-btn {
+    background: linear-gradient(45deg, #dfbbda, #f2bae4);
+    color: #4a3a51;
+    border: none;
+    box-shadow: 0 4px 10px rgba(137, 103, 144, 0.2);
+}
+
+.cancel-btn:hover,
+.save-btn:hover,
+.edit-btn:hover,
+.delete-btn:hover {
+    transform: translateY(-2px);
+}
+
+.cancel-btn:hover {
+    background: #eee;
+}
+
+.save-btn:hover {
+    box-shadow: 0 6px 15px rgba(137, 103, 144, 0.25);
+}
+
+.modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-left: auto;
+}
+
+.edit-btn {
+    background: #f0f0f0;
+    color: #1976d2;
+    border: 1px solid #e0e0e0;
+}
+
+.delete-btn {
+    background: #fff0f0;
+    color: #d32f2f;
+    border: 1px solid #ffcdd2;
+}
+
+.edit-btn:hover {
+    background: #e3f2fd;
+}
+
+.delete-btn:hover {
+    background: #ffebee;
+}
+
+/* Empty state, loading, and error messages */
+.empty-state {
+    background: rgba(137, 103, 144, 0.05);
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.empty-state p {
+    color: #896790;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.loading-message, 
+.error-message {
+    background: rgba(137, 103, 144, 0.05);
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    margin: 1rem 0;
+}
+
+.loading-message {
+    color: #896790;
+}
+
+.error-message {
+    color: #d32f2f;
+    background: rgba(211, 47, 47, 0.05);
 }
