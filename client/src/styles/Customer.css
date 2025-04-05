@@ -136,6 +136,16 @@
     color: #ed6c02;
 }
 
+.status-badge.pending {
+    background-color: rgba(237, 108, 2, 0.1);
+    color: #ed6c02;
+}
+
+.status-badge.new {
+    background-color: rgba(25, 118, 210, 0.1);
+    color: #1976d2;
+}
+
 .items-preview {
     display: flex;
     flex-wrap: wrap;
@@ -278,6 +288,11 @@
     color: #ed6c02;
 }
 
+.status-badge.new {
+    background-color: rgba(25, 118, 210, 0.1);
+    color: #1976d2;
+}
+
 .modal-body {
     display: flex;
     gap: 2rem;
@@ -387,4 +402,151 @@
 .add-invoice-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 15px rgba(137, 103, 144, 0.3);
+}
+
+/* Due amount styling */
+.due-amount {
+    color: #d32f2f;
+    font-weight: 600;
+}
+
+.dark-theme .due-amount {
+    color: #ff6b6b;
+}
+
+/* Transaction card styles for card-based layout */
+.transaction-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.transaction-card {
+  background: var(--current-card-bg, #ffffff);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(137, 103, 144, 0.08);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 1px solid #ffe1f5;
+  cursor: pointer;
+}
+
+.dark-theme .transaction-card {
+  border: 1px solid #4a3a51;
+}
+
+.transaction-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(137, 103, 144, 0.15);
+}
+
+.transaction-card.selected {
+  border: 2px solid #896790;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(137, 103, 144, 0.15);
+}
+
+.transaction-header {
+  background: linear-gradient(to right, #f2bae4, #dfbbda);
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.transaction-icon {
+  background: rgba(255, 255, 255, 0.25);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1rem;
+}
+
+.transaction-amount {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
+}
+
+.transaction-details {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.transaction-date, .transaction-method {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  color: #4a3a51;
+}
+
+.transaction-notes {
+  font-size: 0.85rem;
+  color: #896790;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed #ffe1f5;
+  font-style: italic;
+}
+
+.no-transactions {
+  text-align: center;
+  padding: 2rem;
+  color: #896790;
+  background: rgba(137, 103, 144, 0.05);
+  border-radius: 12px;
+  margin-top: 1rem;
+}
+
+.transaction-detail-card {
+  background: rgba(137, 103, 144, 0.05);
+  border-radius: 12px;
+  padding: 1.2rem;
+  margin-top: 1.5rem;
+}
+
+.transaction-detail-content {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(137, 103, 144, 0.1);
+}
+
+.detail-row.notes {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.detail-label {
+  color: #896790;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.detail-value {
+  color: #4a3a51;
+  font-size: 0.95rem;
+}
+
+.detail-value.highlight {
+  font-weight: 600;
+  color: #896790;
+  font-size: 1.1rem;
 }

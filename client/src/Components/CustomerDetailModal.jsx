@@ -12,11 +12,46 @@ import {
   faShoppingBag,
   faEnvelope,
   faPlus,
-  faTimes
+  faTimes,
+  faWallet,
+  faCreditCard,
+  faReceipt
 } from '@fortawesome/free-solid-svg-icons';
 
 export default function CustomerDetailModal({ customer, onClose }) {
-    const [selectedInvoice, setSelectedInvoice] = useState(null);
+    const [selectedTransaction, setSelectedTransaction] = useState(null);
+
+    // Format date for display
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-IN', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    };
+
+    // Format currency for display
+    const formatCurrency = (amount) => {
+        return new Intl.NumberFormat('en-IN', {
+            style: 'currency',
+            currency: 'INR',
+            maximumFractionDigits: 0
+        }).format(amount);
+    };
+
+    // Determine customer status
+    const getStatus = () => {
+        if (customer.balanceDue > 0) {
+            return { status: 'pending', icon: faClock, label: 'Due Balance' };
+        } else if (customer.amountPaid > 0) {
+            return { status: 'paid', icon: faCheckCircle, label: 'Paid' };
+        } else {
+            return { status: 'new', icon: faUser, label: 'New' };
+        }
+    };
+
+    const status = getStatus();
 
     return (
         <div className="modal-overlay full-screen">
@@ -30,14 +65,18 @@ export default function CustomerDetailModal({ customer, onClose }) {
                         <FontAwesomeIcon icon={faUser} />
                     </div>
                     <div className="modal-header-info">
-                        <h2>{customer.CustomerName}</h2>
+                        <h2>{customer.name}</h2>
                         <p>
                             <FontAwesomeIcon icon={faPhone} style={{ marginRight: '8px' }} />
-                            {customer.CustomerMobile}
+                            {customer.phoneNumber}
                         </p>
-                        <div className={`status-badge ${customer.Status.toLowerCase()}`}>
-                            <FontAwesomeIcon icon={customer.Status === 'Paid' ? faCheckCircle : faClock} />
-                            {customer.Status}
+                        <p>
+                            <FontAwesomeIcon icon={faEnvelope} style={{ marginRight: '8px' }} />
+                            {customer.email}
+                        </p>
+                        <div className={`status-badge ${status.status}`}>
+                            <FontAwesomeIcon icon={status.icon} />
+                            {status.label}
                         </div>
                     </div>
                 </div>
@@ -46,68 +85,109 @@ export default function CustomerDetailModal({ customer, onClose }) {
                     <div className="info-section">
                         <h3>Customer Information</h3>
                         <p>
-                            <span><FontAwesomeIcon icon={faMapMarkerAlt} /> Address</span>
-                            <span>{customer.CustomerAdd}</span>
+                            <span><FontAwesomeIcon icon={faMapMarkerAlt} /> Billing Address</span>
+                            <span>{customer.billingAddress}</span>
                         </p>
                         <p>
-                            <span><FontAwesomeIcon icon={faPhone} /> Phone</span>
-                            <span>{customer.CustomerMobile}</span>
+                            <span><FontAwesomeIcon icon={faMapMarkerAlt} /> Shipping Address</span>
+                            <span>{customer.shippingAddress}</span>
                         </p>
                         <p>
-                            <span><FontAwesomeIcon icon={faEnvelope} /> Email</span>
-                            <span>customer@example.com</span>
+                            <span><FontAwesomeIcon icon={faWallet} /> Balance Due</span>
+                            <span className={customer.balanceDue > 0 ? 'due-amount' : ''}>
+                                {formatCurrency(customer.balanceDue)}
+                            </span>
+                        </p>
+                        <p>
+                            <span><FontAwesomeIcon icon={faMoneyBillWave} /> Amount Paid</span>
+                            <span>{formatCurrency(customer.amountPaid)}</span>
+                        </p>
+                        <p>
+                            <span><FontAwesomeIcon icon={faCalendarAlt} /> Customer Since</span>
+                            <span>{formatDate(customer.createdAt)}</span>
                         </p>
                     </div>
 
                     <div className="purchase-section">
-                        <h3>Purchase History</h3>
-                        {customer.invoices.length > 0 ? (
-                            <div className="invoice-list">
-                                {customer.invoices.map((invoice) => (
-                                    <div key={invoice.id} 
-                                        className="invoice-item" 
-                                        onClick={() => setSelectedInvoice(invoice)}
+                        <h3>Transaction History</h3>
+                        {customer.transactions.length > 0 ? (
+                            <div className="transaction-grid">
+                                {customer.transactions.map((transaction, index) => (
+                                    <div 
+                                        key={index} 
+                                        className={`transaction-card ${selectedTransaction === transaction ? 'selected' : ''}`}
+                                        onClick={() => setSelectedTransaction(transaction)}
                                     >
-                                        <div className="invoice-date">
-                                            <FontAwesomeIcon icon={faCalendarAlt} style={{ marginRight: '8px' }} />
-                                            {invoice.date}
+                                        <div className="transaction-header">
+                                            <div className="transaction-icon">
+                                                <FontAwesomeIcon icon={faReceipt} />
+                                            </div>
+                                            <div className="transaction-amount">
+                                                {formatCurrency(transaction.amount)}
+                                            </div>
                                         </div>
-                                        <div className="invoice-amount">
-                                            <FontAwesomeIcon icon={faMoneyBillWave} style={{ marginRight: '8px' }} />
-                                            {invoice.amount}
+                                        <div className="transaction-details">
+                                            <div className="transaction-date">
+                                                <FontAwesomeIcon icon={faCalendarAlt} />
+                                                <span>{formatDate(transaction.date)}</span>
+                                            </div>
+                                            <div className="transaction-method">
+                                                <FontAwesomeIcon icon={faCreditCard} />
+                                                <span>{transaction.method}</span>
+                                            </div>
+                                            {transaction.notes && (
+                                                <div className="transaction-notes">
+                                                    {transaction.notes}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 ))}
                             </div>
                         ) : (
-                            <p>No invoices found for this customer.</p>
+                            <p className="no-transactions">No transactions found for this customer.</p>
                         )}
 
-                        {selectedInvoice && (
-                            <div className="invoice-details">
+                        {selectedTransaction && (
+                            <div className="transaction-detail-card">
                                 <h3>
                                     <FontAwesomeIcon icon={faFileInvoice} style={{ marginRight: '8px' }} />
-                                    Invoice Details
+                                    Transaction Details
                                 </h3>
-                                <div className="invoice-info">
-                                    <p>
-                                        <span><FontAwesomeIcon icon={faCalendarAlt} /> Date</span>
-                                        <span>{selectedInvoice.date}</span>
-                                    </p>
-                                    <p>
-                                        <span><FontAwesomeIcon icon={faMoneyBillWave} /> Amount</span>
-                                        <span>{selectedInvoice.amount}</span>
-                                    </p>
+                                <div className="transaction-detail-content">
+                                    <div className="detail-row">
+                                        <div className="detail-label">
+                                            <FontAwesomeIcon icon={faCalendarAlt} /> Date
+                                        </div>
+                                        <div className="detail-value">
+                                            {formatDate(selectedTransaction.date)}
+                                        </div>
+                                    </div>
+                                    <div className="detail-row">
+                                        <div className="detail-label">
+                                            <FontAwesomeIcon icon={faMoneyBillWave} /> Amount
+                                        </div>
+                                        <div className="detail-value highlight">
+                                            {formatCurrency(selectedTransaction.amount)}
+                                        </div>
+                                    </div>
+                                    <div className="detail-row">
+                                        <div className="detail-label">
+                                            <FontAwesomeIcon icon={faCreditCard} /> Payment Method
+                                        </div>
+                                        <div className="detail-value">
+                                            {selectedTransaction.method}
+                                        </div>
+                                    </div>
+                                    {selectedTransaction.notes && (
+                                        <div className="detail-row notes">
+                                            <div className="detail-label">Notes</div>
+                                            <div className="detail-value">
+                                                {selectedTransaction.notes}
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
-                                <h4>Purchased Items:</h4>
-                                <ul>
-                                    {selectedInvoice.details.map((item, index) => (
-                                        <li key={index}>
-                                            <FontAwesomeIcon icon={faShoppingBag} style={{ marginRight: '8px' }} />
-                                            {item}
-                                        </li>
-                                    ))}
-                                </ul>
                             </div>
                         )}
 
