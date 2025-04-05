@@ -196,3 +196,21 @@ export const changePassword = async (req, res) => {
     });
   }
 };
+
+export const testConnection = async (req, res) => {
+  try {
+    res.status(200).json({
+      success: true,
+      message: "API connection successful",
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'development'
+    });
+  } catch (error) {
+    console.error("Test connection error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Test connection failed",
+      error: error.message
+    });
+  }
+};

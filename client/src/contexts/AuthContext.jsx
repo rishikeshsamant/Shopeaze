@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { userService } from '../services/api';
+import userService from '../services/api/userService';
 import { toast } from 'react-toastify';
 
 const AuthContext = createContext();
@@ -37,12 +37,16 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     try {
       setLoading(true);
+      console.log('Login attempt with:', credentials);
+      console.log('API URL:', import.meta.env.VITE_API_URL);
       const response = await userService.login(credentials);
+      console.log('Login response:', response);
       localStorage.setItem('token', response.data.token);
       await fetchCurrentUser();
       toast.success('Login successful!');
       return true;
     } catch (error) {
+      console.error('Login error details:', error);
       toast.error(error.response?.data?.message || 'Login failed');
       return false;
     } finally {

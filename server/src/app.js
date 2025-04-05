@@ -13,15 +13,38 @@ import dashboardRoutes from "./routes/dashboard.routes.js";
 const app = express();
 
 
-const corsOrigin = process.env.CORS_ORIGIN
-  ? process.env.CORS_ORIGIN.replace(/"/g, "")
-  : "https://shopeaze-frontend.onrender.com";
+// Get CORS origin from environment or use defaults
+const corsOrigin = process.env.CORS_ORIGIN || "https://shopeaze-frontend.onrender.com";
 
+// Allow additional origins for development
+const allowedOrigins = [
+  corsOrigin,
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://127.0.0.1:5173",
+  "http://127.0.0.1:5174",
+];
+
+// Log the CORS configuration for debugging
+console.log("CORS Origins:", allowedOrigins);
 
 app.use(
   cors({
-    origin: corsOrigin,
+    origin: function(origin, callback) {
+      // Allow requests with no origin (like mobile apps, curl, etc)
+      if (!origin) return callback(null, true);
+      
+      // Check if the origin is allowed
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        return callback(null, true);
+      } else {
+        console.log("CORS blocked origin:", origin);
+        return callback(null, false);
+      }
+    },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
   })
 );
 
