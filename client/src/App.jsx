@@ -56,7 +56,9 @@ function AppContent() {
     <div className={`app-container ${theme}-theme`}>
       {/* Side Navigation for desktop */}
       <nav className="side-navigation desktop-only">
-        <div className="logo">ShopEaze</div>
+        <div className="logo">
+          <img src="Images/shopeazelogo.png" alt="logo" />
+        </div>
         <div className="nav-links">
           {navLinks.map(link => (
             <Link
@@ -78,7 +80,9 @@ function AppContent() {
       {/* Mobile Header - Only shown when isMobile is true */}
       {isMobile && (
         <header className="mobile-header">
-          <div className="mobile-logo">ShopEaze</div>
+          <div className="mobile-logo">
+            <img src="Images/shopeazelogo.png" alt="logo" />
+          </div>
           <button className="mobile-theme-toggle" onClick={toggleTheme} title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}>
             <FontAwesomeIcon icon={theme === 'light' ? faMoon : faSun} />
           </button>
@@ -107,7 +111,7 @@ function AppContent() {
                 to={link.path}
                 className={`mobile-nav-link ${link.name} ${location.pathname === link.path ? 'active' : ''}`}
               >
-                <FontAwesomeIcon icon={link.icon}/>
+                <FontAwesomeIcon icon={link.icon} />
                 <span>{link.name}</span>
               </Link>
             ))}

@@ -56,7 +56,7 @@ const Items = () => {
       price: 499,
       category: { _id: "3", name: "Clothing" },
       subCategory: 'T-Shirts',
-      productImage: 'https://via.placeholder.com/150',
+      productImage: 'https://gogirgit.com/cdn/shop/products/unisex-men-printed-graphic-golden-yellow-cotton-tshirt-summer-design-gogirgit_1800x.jpg?v=1662573030',
       createdAt: '2023-09-20T14:15:00Z',
       updatedAt: '2023-09-20T14:15:00Z'
     },
@@ -67,7 +67,7 @@ const Items = () => {
       price: 350,
       category: { _id: "1", name: "Groceries" },
       subCategory: 'Rice & Grains',
-      productImage: 'https://via.placeholder.com/150',
+      productImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvJlWgt2pYOKkyJyC87ybiAV56fmylG05JZA&s',
       createdAt: '2023-08-12T09:45:00Z',
       updatedAt: '2023-08-12T09:45:00Z'
     },
