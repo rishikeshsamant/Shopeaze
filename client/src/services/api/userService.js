@@ -4,6 +4,7 @@ const userService = {
   // User authentication
   login: (credentials) => axiosClient.post('/user/login', credentials),
   register: (userData) => axiosClient.post('/user/register', userData),
+  refreshToken: () => axiosClient.post('/user/refresh-token'),
   
   // User profile
   getCurrentUser: () => axiosClient.get('/user/profile'),
