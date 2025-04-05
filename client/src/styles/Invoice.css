@@ -263,7 +263,7 @@
   border-radius: 12px;
   width: 90%;
   max-width: 900px;
-  max-height: 90vh;
+  max-height: 80vh;
   overflow-y: auto;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   animation: modalFadeIn 0.3s ease-in-out;
@@ -779,7 +779,6 @@
   .invoice-modal,
   .bill-preview-modal {
     width: 95%;
-    max-height: 95vh;
   }
   
   .total-row {
