@@ -10,7 +10,8 @@ import {
   faSun,
   faMoon,
   faSignOutAlt,
-  faUser
+  faUser,
+  faChartLine
 } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
 import Customer from './pages/Customer'
@@ -21,6 +22,7 @@ import Setting from './pages/Setting';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Sales from './pages/Sales';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 import { useAuth } from './contexts/AuthContext';
 
@@ -167,6 +169,7 @@ function AppContent() {
           <Route path="/invoices" element={<ProtectedRoute><Invoice /></ProtectedRoute>} />
           <Route path="/settings" element={<ProtectedRoute><Setting /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/sales" element={<ProtectedRoute><Sales /></ProtectedRoute>} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </main>

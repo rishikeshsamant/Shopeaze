@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/Home.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faShoppingCart,
@@ -20,6 +20,7 @@ import {
   faUser
 } from '@fortawesome/free-solid-svg-icons';
 import Profile from './Profile';
+import axios from 'axios';
 
 // Circular progress with label component
 const CircularProgressWithLabel = ({ value, color, size = 70, thickness = 5 }) => {
@@ -54,12 +55,12 @@ const CircularProgressWithLabel = ({ value, color, size = 70, thickness = 5 }) =
   );
 };
 
-// Enhanced Stat Card component
-const StatCard = ({ title, value, change, icon, iconColor }) => {
+// Enhanced Stat Card component with onClick navigation
+const StatCard = ({ title, value, change, icon, iconColor, onClick }) => {
   const isPositive = parseFloat(change) > 0;
 
   return (
-    <div className="stat-card">
+    <div className="stat-card" onClick={onClick}>
       <div className="stat-card-header">
         <p className="stat-card-title">{title}</p>
         <div className="stat-card-icon" style={{ backgroundColor: `rgba(${hexToRgb(iconColor)}, 0.1)`, color: iconColor }}>
@@ -81,35 +82,54 @@ const StatCard = ({ title, value, change, icon, iconColor }) => {
 };
 
 // Revenue Card for data visualization
-const RevenueCard = () => {
-  // Mock data for visualization
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-  const values = [40, 65, 50, 80, 75, 90];
-  const maxValue = Math.max(...values);
+const RevenueCard = ({ salesData, selectedPeriod, onPeriodChange }) => {
+  const months = salesData?.map(item => item.date) || ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+  const values = salesData?.map(item => item.amount) || [40, 65, 50, 80, 75, 90];
+  const maxValue = Math.max(...values, 1); // Ensure non-zero division
+
+  const totalRevenue = values.reduce((sum, amount) => sum + amount, 0);
+
+  // Calculate growth if data is available
+  const lastPeriodTotal = values.slice(0, values.length / 2).reduce((sum, amount) => sum + amount, 0);
+  const currentPeriodTotal = values.slice(values.length / 2).reduce((sum, amount) => sum + amount, 0);
+  const growth = lastPeriodTotal > 0 
+    ? ((currentPeriodTotal - lastPeriodTotal) / lastPeriodTotal * 100).toFixed(1)
+    : 0;
+  const isPositive = parseFloat(growth) >= 0;
+
+  const handlePeriodChange = (e) => {
+    if (onPeriodChange) {
+      onPeriodChange(e.target.value);
+    }
+  };
 
   return (
     <div className="revenue-card">
       <div className="revenue-card-header">
         <div>
           <h3 className="revenue-card-title">Revenue Trends</h3>
-          <p className="revenue-card-subtitle">Monthly revenue performance</p>
+          <p className="revenue-card-subtitle">Revenue performance</p>
         </div>
         <div className="revenue-card-actions">
-          <button className="icon-button primary-light">
-            <FontAwesomeIcon icon={faFilter} />
-          </button>
-          <button className="icon-button">
-            <FontAwesomeIcon icon={faEllipsisV} />
-          </button>
+          <select 
+            className="period-selector" 
+            value={selectedPeriod}
+            onChange={handlePeriodChange}
+            aria-label="Select time period"
+          >
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+          </select>
         </div>
       </div>
 
-      <h2 className="revenue-card-amount">₹24,680.50</h2>
+      <h2 className="revenue-card-amount">₹{totalRevenue.toFixed(2)}</h2>
 
       <div className="revenue-card-change">
-        <div className="change-indicator positive">
-          <FontAwesomeIcon icon={faArrowUp} />
-          <span>18.2%</span>
+        <div className={`change-indicator ${isPositive ? 'positive' : 'negative'}`}>
+          <FontAwesomeIcon icon={isPositive ? faArrowUp : faArrowDown} />
+          <span>{Math.abs(growth)}%</span>
         </div>
         <p className="change-period">vs previous period</p>
       </div>
@@ -118,12 +138,13 @@ const RevenueCard = () => {
         {months.map((month, index) => (
           <div
             key={month}
-            className={`chart-bar ${index === 5 ? 'active' : ''}`}
+            className={`chart-bar ${index === months.length - 1 ? 'active' : ''}`}
             style={{
-              height: `${(values[index] / maxValue) * 200}px`,
+              height: `${(values[index] / maxValue) * 100}%`,
             }}
+            aria-label={`${month}: ₹${values[index].toFixed(2)}`}
           >
-            <div className="chart-tooltip">{`₹${values[index] * 100}`}</div>
+            <div className="chart-tooltip">{`₹${values[index].toFixed(2)}`}</div>
           </div>
         ))}
       </div>
@@ -136,54 +157,20 @@ const RevenueCard = () => {
   );
 };
 
-// Performance Metrics Card
-const PerformanceCard = () => {
-  const metrics = [
-    { name: 'Sales Target', value: 78, color: '#896790' },
-    { name: 'Customer Retention', value: 92, color: '#bfadcc' },
-    { name: 'New Customers', value: 62, color: '#f2bae4' },
-  ];
-
-  return (
-    <div className="performance-card">
-      <div className="performance-card-header">
-        <h3 className="performance-card-title">Performance Metrics</h3>
-        <button className="icon-button">
-          <FontAwesomeIcon icon={faEllipsisV} />
-        </button>
-      </div>
-
-      <div className="metrics-container">
-        {metrics.map((metric) => (
-          <div className="metric-item" key={metric.name}>
-            <div className="metric-header">
-              <span className="metric-name">{metric.name}</span>
-              <span className="metric-value">{metric.value}%</span>
-            </div>
-            <div className="progress-container">
-              <div
-                className="progress-bar"
-                style={{
-                  width: `${metric.value}%`,
-                  backgroundColor: metric.color
-                }}
-              ></div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
 // Quick Actions Card
 const QuickActionsCard = () => {
+  const navigate = useNavigate();
+
   const actions = [
-    { name: 'New Invoice', icon: faReceipt, color: '#896790' },
-    { name: 'Add Product', icon: faShoppingCart, color: '#bfadcc' },
-    { name: 'Record Payment', icon: faCreditCard, color: '#dfbbda' },
-    { name: 'Sales Report', icon: faChartBar, color: '#f2bae4' },
+    { name: 'New Invoice', icon: faReceipt, color: '#896790', route: '/invoices' },
+    { name: 'Add Product', icon: faShoppingCart, color: '#bfadcc', route: '/items' },
+    { name: 'Record Payment', icon: faCreditCard, color: '#dfbbda', route: '/invoices' },
+    { name: 'Sales Report', icon: faChartBar, color: '#f2bae4', route: '/sales' },
   ];
+
+  const handleActionClick = (route) => {
+    navigate(route);
+  };
 
   return (
     <div className="quick-actions-card">
@@ -198,9 +185,10 @@ const QuickActionsCard = () => {
               borderColor: `rgba(${hexToRgb(action.color)}, 0.3)`,
               color: action.color,
             }}
+            onClick={() => handleActionClick(action.route)}
           >
             <FontAwesomeIcon icon={action.icon} />
-            <span>{action.name}</span>
+            <span className="action-text">{action.name}</span>
           </button>
         ))}
       </div>
@@ -270,6 +258,7 @@ const ActivitiesCard = () => {
   );
 };
 
+
 // Helper function to convert hex color to RGB
 function hexToRgb(hex) {
   // Remove # if present
@@ -287,76 +276,36 @@ const Home = () => {
   const [stats, setStats] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showMenu, setShowMenu] = useState(false);
-
-  // Mock data for demonstration
-  useEffect(() => {
-    const mockStats = [
-      {
-        title: 'Total Sales',
-        value: '₹14,528.25',
-        change: '18.2',
-        icon: faMoneyBillWave,
-        iconColor: '#896790',
-      },
-      {
-        title: 'New Customers',
-        value: '124',
-        change: '12.5',
-        icon: faUsers,
-        iconColor: '#bfadcc',
-      },
-      {
-        title: 'Total Orders',
-        value: '956',
-        change: '8.4',
-        icon: faShoppingCart,
-        iconColor: '#dfbbda',
-      },
-      {
-        title: 'Pending Invoices',
-        value: '28',
-        change: '-5.2',
-        icon: faReceipt,
-        iconColor: '#f2bae4',
-      },
-    ];
-
-    // Simulate loading delay
-    setTimeout(() => {
-      setStats(mockStats);
-      setIsLoading(false);
-    }, 1000);
-  }, []);
+  const [salesData, setSalesData] = useState([]);
+  const [selectedPeriod, setSelectedPeriod] = useState('monthly');
+  const navigate = useNavigate();
 
   // Helper function to format currency
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',
       minimumFractionDigits: 2
-    }).format(amount);
+    }).format(amount).replace('₹', '₹');
   };
 
-  // Function to fetch actual stats from API (mocked)
+  // Function to fetch dashboard stats
   const fetchStats = async () => {
     setIsLoading(true);
     try {
-      // Mock API call
-      // In a real app, this would be:
-      // const response = await fetch('/api/dashboard/stats');
-      // const data = await response.json();
+      const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/login');
+        return;
+      }
 
-      // Using mock data for demonstration
-      const data = {
-        totalSales: 14528.25,
-        newCustomers: 124,
-        totalOrders: 956,
-        pendingInvoices: 28,
-        salesGrowth: 18.2,
-        customerGrowth: 12.5,
-        orderGrowth: 8.4,
-        pendingGrowth: -5.2,
-      };
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/dashboard/stats`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const data = response.data;
 
       setStats([
         {
@@ -365,6 +314,7 @@ const Home = () => {
           change: data.salesGrowth.toString(),
           icon: faMoneyBillWave,
           iconColor: '#896790',
+          route: '/sales'
         },
         {
           title: 'New Customers',
@@ -372,6 +322,7 @@ const Home = () => {
           change: data.customerGrowth.toString(),
           icon: faUsers,
           iconColor: '#bfadcc',
+          route: '/customers'
         },
         {
           title: 'Total Orders',
@@ -379,6 +330,7 @@ const Home = () => {
           change: data.orderGrowth.toString(),
           icon: faShoppingCart,
           iconColor: '#dfbbda',
+          route: '/invoices'
         },
         {
           title: 'Pending Invoices',
@@ -386,17 +338,63 @@ const Home = () => {
           change: data.pendingGrowth.toString(),
           icon: faReceipt,
           iconColor: '#f2bae4',
+          route: '/invoices'
         },
       ]);
+
+      // Fetch sales data for the revenue chart
+      await fetchSalesData('monthly');
     } catch (error) {
       console.error('Failed to fetch dashboard stats:', error);
+      // If we get an authentication error, redirect to login
+      if (error.response && error.response.status === 401) {
+        navigate('/login');
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
+  // Function to fetch sales data by period
+  const fetchSalesData = async (period) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/dashboard/sales/${period}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      setSalesData(response.data);
+      setSelectedPeriod(period);
+    } catch (error) {
+      console.error(`Failed to fetch ${period} sales data:`, error);
+    }
+  };
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  // Handle period change for revenue chart
+  useEffect(() => {
+    if (!isLoading) {
+      fetchSalesData(selectedPeriod);
+    }
+  }, [selectedPeriod]);
+
   const toggleMenu = () => {
     setShowMenu(!showMenu);
+  };
+
+  // Handle card click navigation
+  const handleCardClick = (route) => {
+    navigate(route);
   };
 
   return (
@@ -438,16 +436,18 @@ const Home = () => {
                 change={stat.change}
                 icon={stat.icon}
                 iconColor={stat.iconColor}
+                onClick={() => handleCardClick(stat.route)}
               />
             ))}
           </div>
 
           <div className="dashboard-grid">
             <div className="grid-item large">
-              <RevenueCard />
-            </div>
-            <div className="grid-item">
-              <PerformanceCard />
+              <RevenueCard 
+                salesData={salesData} 
+                selectedPeriod={selectedPeriod}
+                onPeriodChange={setSelectedPeriod}
+              />
             </div>
             <div className="grid-item">
               <QuickActionsCard />
