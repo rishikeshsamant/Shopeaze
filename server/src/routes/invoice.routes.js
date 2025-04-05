@@ -10,7 +10,7 @@ import { auth } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
-// Apply auth middleware to all invoice routes
+
 router.post("/", auth, createInvoice);
 router.get("/", auth, getAllInvoices);
 router.get("/:id", auth, getInvoiceById);

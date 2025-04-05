@@ -3,7 +3,6 @@ import Category from "../models/category.model.js";
 
 export const createItem = async (req, res) => {
   try {
-    // Verify the category exists
     const categoryExists = await Category.findOne({ 
       _id: req.body.category,
       user: req.user.id
@@ -18,7 +17,7 @@ export const createItem = async (req, res) => {
     const item = new Item({ ...req.body, user: req.user.id });
     await item.save();
     
-    // Populate category for the response
+    
     const populatedItem = await Item.findById(item._id).populate('category');
     res.status(201).json(populatedItem);
   } catch (error) {
@@ -56,7 +55,7 @@ export const getItemById = async (req, res) => {
 
 export const updateItem = async (req, res) => {
   try {
-    // If the category is being updated, verify it exists
+    
     if (req.body.category) {
       const categoryExists = await Category.findOne({ 
         _id: req.body.category,

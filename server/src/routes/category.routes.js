@@ -10,7 +10,7 @@ import { auth } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
-// Apply auth middleware to all category routes
+
 router.post("/", auth, createCategory);
 router.get("/", auth, getCategories);
 router.get("/:id", auth, getCategoryById);
