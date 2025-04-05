@@ -1,0 +1,37 @@
+:root {
+  --primary-color: #007bff;
+  --secondary-color: #6c757d;
+  --success-color: #28a745;
+  --danger-color: #dc3545;
+  --warning-color: #ffc107;
+  --info-color: #17a2b8;
+  --light-color: #f8f9fa;
+  --dark-color: #343a40;
+  --body-bg: #f8f9fa;
+  --header-bg: #ffffff;
+  --card-bg: #ffffff;
+  --text-color: #333;
+  --border-color: #dee2e6;
+  --form-bg: #ffffff;
+  --table-header-bg: #f3f3f6;
+  --table-hover-bg: #f8f9fa;
+  --table-border: #eaebef;
+  --current-bill-bg: #ffffff;
+  --current-bill-accent: #007bff;
+  --current-table-border: #eee;
+}
+
+.dark-theme {
+  --body-bg: #1a1d21;
+  --header-bg: #282c34;
+  --card-bg: #282c34;
+  --text-color: #e6e6e6;
+  --border-color: #40454e;
+  --form-bg: #282c34;
+  --table-header-bg: #32363f;
+  --table-hover-bg: #3a3f48;
+  --table-border: #40454e;
+  --current-bill-bg: #282c34;
+  --current-bill-accent: #60a5fa;
+  --current-table-border: #40454e;
+} 
