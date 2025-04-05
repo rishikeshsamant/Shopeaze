@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../styles/Profile.css';
+import { useNavigate } from 'react-router-dom';
+import { useTheme } from '../contexts/ThemeContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faUser,
@@ -9,22 +11,19 @@ import {
   faCamera,
   faSpinner,
   faCheck,
-  faExclamationTriangle
+  faTimes,
+  faArrowLeft
 } from '@fortawesome/free-solid-svg-icons';
-import { useTheme } from '../contexts/ThemeContext';
-import { useAuth } from '../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
 
 export default function Profile() {
-  const { theme } = useTheme();
-  const { user, token, updateProfile, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-  
-  const [formData, setFormData] = useState({
+  const { theme } = useTheme();
+  const [user, setUser] = useState({
     name: '',
     email: '',
     phoneNumber: '',
     address: '',
+    profilePicture: ''
   });
   
   const [isLoading, setIsLoading] = useState(true);
@@ -32,38 +31,41 @@ export default function Profile() {
   const [message, setMessage] = useState({ text: '', type: '' });
   const fileInputRef = useRef(null);
   const [previewImage, setPreviewImage] = useState(null);
-  const [selectedFile, setSelectedFile] = useState(null);
   
-  // Redirect if not logged in
   useEffect(() => {
-    if (!authLoading && !token) {
-      // If not loading and no token exists, redirect to login
-      // This would be enabled in a real app with login functionality
-      // navigate('/login');
-    }
-  }, [authLoading, token, navigate]);
+    // Fetch user data from backend
+    fetchUserData();
+  }, []);
   
-  // Load user data
-  useEffect(() => {
-    if (user) {
-      setFormData({
-        name: user.name || '',
-        email: user.email || '',
-        phoneNumber: user.phoneNumber || '',
-        address: user.address || ''
-      });
+  const fetchUserData = async () => {
+    setIsLoading(true);
+    try {
+      // Mock data for now - in production, this would be an API call
+      // const response = await fetch('/api/user/profile');
+      // const data = await response.json();
       
-      if (user.profilePicture) {
-        setPreviewImage(user.profilePicture);
-      }
+      // Mock response
+      const data = {
+        name: 'Yasir Akhlaque',
+        email: 'yasirakhlaque@gmail.com',
+        phoneNumber: '9876543210',
+        address: 'New Delhi, India',
+        profilePicture: 'https://via.placeholder.com/150'
+      };
       
+      setUser(data);
+      setPreviewImage(data.profilePicture);
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      setMessage({ text: 'Failed to load profile data', type: 'error' });
+    } finally {
       setIsLoading(false);
     }
-  }, [user]);
+  };
   
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setUser(prev => ({ ...prev, [name]: value }));
   };
   
   const handleImageClick = () => {
@@ -73,62 +75,61 @@ export default function Profile() {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setSelectedFile(file);
-      
       // Preview the image
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewImage(reader.result);
       };
       reader.readAsDataURL(file);
+      
+      // In a real application, you would upload this file to your server
+      // and update the user.profilePicture with the URL returned from the server
     }
   };
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!user || !user._id) {
-      setMessage({ 
-        text: 'You must be logged in to update your profile', 
-        type: 'error' 
-      });
-      return;
-    }
-    
     setIsSaving(true);
     setMessage({ text: '', type: '' });
     
     try {
-      const result = await updateProfile(
-        user._id, 
-        formData, 
-        selectedFile
-      );
+      // Simulate API call
+      // In production:
+      // const formData = new FormData();
+      // formData.append('name', user.name);
+      // formData.append('email', user.email);
+      // formData.append('phoneNumber', user.phoneNumber);
+      // formData.append('address', user.address);
+      // if (fileInputRef.current.files[0]) {
+      //   formData.append('profilePicture', fileInputRef.current.files[0]);
+      // }
+      // 
+      // const response = await fetch('/api/user/profile', {
+      //   method: 'PUT',
+      //   body: formData
+      // });
+      // const data = await response.json();
       
-      if (result.success) {
-        setMessage({ text: 'Profile updated successfully!', type: 'success' });
-        // Clear the selected file after successful update
-        setSelectedFile(null);
-      } else {
-        setMessage({ 
-          text: result.error || 'Failed to update profile', 
-          type: 'error' 
-        });
-      }
+      // Simulate delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      setMessage({ text: 'Profile updated successfully!', type: 'success' });
+      // Update local state with the "response"
+      setUser(prev => ({
+        ...prev,
+        profilePicture: previewImage
+      }));
     } catch (error) {
       console.error('Error updating profile:', error);
-      setMessage({ 
-        text: 'An unexpected error occurred. Please try again.', 
-        type: 'error' 
-      });
+      setMessage({ text: 'Failed to update profile', type: 'error' });
     } finally {
       setIsSaving(false);
     }
   };
   
-  if (authLoading || isLoading) {
+  if (isLoading) {
     return (
-      <div className="profile-loading">
+      <div className={`profile-loading ${theme}-theme`}>
         <FontAwesomeIcon icon={faSpinner} spin className="loading-icon" />
         <p>Loading your profile...</p>
       </div>
@@ -136,26 +137,32 @@ export default function Profile() {
   }
 
   return (
-    <div className="profile-page">
-      {message.text && (
-        <div className={`profile-message ${message.type}`}>
-          <FontAwesomeIcon icon={message.type === 'success' ? faCheck : faExclamationTriangle} />
-          <span>{message.text}</span>
+    <div className={`profile-container ${theme}-theme`}>
+      <div className="profile-header">
+        <div className="profile-header-left">
+          <button className="back-button" onClick={() => navigate(-1)}>
+            <FontAwesomeIcon icon={faArrowLeft} />
+          </button>
+          <div>
+            <h1>My Profile</h1>
+            <p>Manage your personal information</p>
+          </div>
         </div>
-      )}
+      </div>
       
-      <div className="profile-content">
+      <div className="profile-card">
         <div className="profile-image-section">
           <div className="profile-image-container" onClick={handleImageClick}>
             {previewImage ? (
               <img src={previewImage} alt="Profile" className="profile-image" />
             ) : (
-              <div className="profile-placeholder">
-                <svg width="100%" height="100%" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                  <rect width="100%" height="100%" rx="40" fill="transparent" stroke="var(--primary-lighter, #dfbbda)" strokeWidth="2" />
-                </svg>
+              <div className="profile-image-placeholder">
+                <FontAwesomeIcon icon={faUser} />
               </div>
             )}
+            <div className="profile-image-overlay">
+              <FontAwesomeIcon icon={faCamera} />
+            </div>
           </div>
           <input 
             type="file" 
@@ -167,15 +174,23 @@ export default function Profile() {
           <p className="profile-upload-hint">Click to upload photo</p>
         </div>
         
-        <div className="profile-form-container">
+        <div className="profile-form-section">
+          {message.text && (
+            <div className={`profile-message ${message.type}`}>
+              <FontAwesomeIcon icon={message.type === 'success' ? faCheck : faTimes} />
+              <span>{message.text}</span>
+            </div>
+          )}
+          
           <form onSubmit={handleSubmit} className="profile-form">
             <div className="form-group">
-              <span className="input-prefix">👤</span>
+              <div className="input-icon">
+                <FontAwesomeIcon icon={faUser} />
+              </div>
               <input
                 type="text"
-                id="name"
                 name="name"
-                value={formData.name}
+                value={user.name}
                 onChange={handleInputChange}
                 placeholder="Full Name"
                 required
@@ -183,12 +198,13 @@ export default function Profile() {
             </div>
             
             <div className="form-group">
-              <span className="input-prefix">📧</span>
+              <div className="input-icon">
+                <FontAwesomeIcon icon={faEnvelope} />
+              </div>
               <input
                 type="email"
-                id="email"
                 name="email"
-                value={formData.email}
+                value={user.email}
                 onChange={handleInputChange}
                 placeholder="Email Address"
                 required
@@ -196,23 +212,25 @@ export default function Profile() {
             </div>
             
             <div className="form-group">
-              <span className="input-prefix">📱</span>
+              <div className="input-icon">
+                <FontAwesomeIcon icon={faPhone} />
+              </div>
               <input
                 type="tel"
-                id="phoneNumber"
                 name="phoneNumber"
-                value={formData.phoneNumber}
+                value={user.phoneNumber}
                 onChange={handleInputChange}
                 placeholder="Phone Number"
               />
             </div>
             
             <div className="form-group">
-              <span className="input-prefix textarea-prefix">🏠</span>
+              <div className="input-icon textarea-icon">
+                <FontAwesomeIcon icon={faHome} />
+              </div>
               <textarea
-                id="address"
                 name="address"
-                value={formData.address}
+                value={user.address}
                 onChange={handleInputChange}
                 placeholder="Address"
                 rows="4"
@@ -224,7 +242,12 @@ export default function Profile() {
               className="update-profile-btn" 
               disabled={isSaving}
             >
-              {isSaving ? "UPDATING..." : "UPDATE PROFILE"}
+              {isSaving ? (
+                <>
+                  <FontAwesomeIcon icon={faSpinner} spin />
+                  <span>Updating...</span>
+                </>
+              ) : 'Update Profile'}
             </button>
           </form>
         </div>
