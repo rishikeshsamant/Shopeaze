@@ -9,7 +9,9 @@ import {
   faSpinner,
   faBox,
   faTag,
-  faMoneyBillWave
+  faMoneyBillWave,
+  faImage,
+  faLayerGroup
 } from '@fortawesome/free-solid-svg-icons';
 
 const Items = () => {
@@ -22,45 +24,60 @@ const Items = () => {
     description: '',
     price: '',
     category: '',
-    stock: '',
-    unit: 'piece',
+    subCategory: '',
+    productImage: '',
   });
 
-  // Dummy data for now
+  // Categories for dropdown (would come from API in production)
+  const categories = [
+    { _id: "1", name: "Groceries" },
+    { _id: "2", name: "Electronics" },
+    { _id: "3", name: "Clothing" },
+    { _id: "4", name: "Home & Kitchen" }
+  ];
+
+  // Dummy data aligned with backend schema
   const dummyProducts = [
     {
       _id: '1',
-      name: 'Apple',
-      description: 'Fresh red apples',
-      price: 1.5,
-      category: 'Fruits',
-      stock: 120,
-      unit: 'kg',
+      name: 'Smartphone',
+      description: 'Latest model with high-end features',
+      price: 15000,
+      category: { _id: "2", name: "Electronics" },
+      subCategory: 'Mobile Phones',
+      productImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfCddtA1b0LgnZ37Nvto8dIhu5vxhIxvxIJw&s',
+      createdAt: '2023-10-15T10:30:00Z',
+      updatedAt: '2023-10-15T10:30:00Z'
     },
     {
       _id: '2',
-      name: 'Carrot',
-      description: 'Organic carrots',
-      price: 0.8,
-      category: 'Vegetables',
-      stock: 200,
-      unit: 'kg',
+      name: 'Cotton T-Shirt',
+      description: 'Comfortable cotton t-shirt, available in multiple colors',
+      price: 499,
+      category: { _id: "3", name: "Clothing" },
+      subCategory: 'T-Shirts',
+      productImage: 'https://via.placeholder.com/150',
+      createdAt: '2023-09-20T14:15:00Z',
+      updatedAt: '2023-09-20T14:15:00Z'
     },
     {
       _id: '3',
-      name: 'Milk',
-      description: 'Dairy milk 1L pack',
-      price: 2.0,
-      category: 'Dairy',
-      stock: 80,
-      unit: 'litre',
+      name: 'Rice (5kg)',
+      description: 'Premium basmati rice',
+      price: 350,
+      category: { _id: "1", name: "Groceries" },
+      subCategory: 'Rice & Grains',
+      productImage: 'https://via.placeholder.com/150',
+      createdAt: '2023-08-12T09:45:00Z',
+      updatedAt: '2023-08-12T09:45:00Z'
     },
   ];
 
   const formatCurrency = (value) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',
+      maximumFractionDigits: 0
     }).format(value);
   };
 
@@ -84,7 +101,14 @@ const Items = () => {
   const handleOpenModal = (product = null) => {
     if (product) {
       setSelectedProduct(product);
-      setFormData(product);
+      setFormData({
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        category: product.category._id,
+        subCategory: product.subCategory,
+        productImage: product.productImage,
+      });
     } else {
       setSelectedProduct(null);
       setFormData({
@@ -92,8 +116,8 @@ const Items = () => {
         description: '',
         price: '',
         category: '',
-        stock: '',
-        unit: 'piece',
+        subCategory: '',
+        productImage: '',
       });
     }
     setShowModal(true);
@@ -115,16 +139,34 @@ const Items = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const categoryObj = categories.find(cat => cat._id === formData.category);
+      
       if (selectedProduct) {
         const updated = products.map((p) =>
-          p._id === selectedProduct._id ? { ...formData, _id: p._id } : p
+          p._id === selectedProduct._id ? { 
+            ...p,
+            name: formData.name,
+            description: formData.description,
+            price: parseFloat(formData.price),
+            category: categoryObj,
+            subCategory: formData.subCategory,
+            productImage: formData.productImage,
+            updatedAt: new Date().toISOString()
+          } : p
         );
         setProducts(updated);
         alert('Product updated successfully');
       } else {
         const newProduct = {
-          ...formData,
           _id: Date.now().toString(),
+          name: formData.name,
+          description: formData.description,
+          price: parseFloat(formData.price),
+          category: categoryObj,
+          subCategory: formData.subCategory,
+          productImage: formData.productImage,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
         };
         setProducts((prev) => [...prev, newProduct]);
         alert('Product created successfully');
@@ -165,64 +207,71 @@ const Items = () => {
         </button>
       </div>
 
-      <div className="table-container">
-        <table className="products-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Price</th>
-              <th>Category</th>
-              <th>Stock</th>
-              <th>Unit</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((product) => (
-              <tr key={product._id}>
-                <td>{product.name}</td>
-                <td className="description-cell">{product.description}</td>
-                <td>{formatCurrency(product.price)}</td>
-                <td>{product.category}</td>
-                <td>{product.stock}</td>
-                <td>{product.unit}</td>
-                <td className="actions">
-                  <button
-                    className="btn-icon"
-                    onClick={() => handleOpenModal(product)}
-                    title="Edit"
-                  >
-                    <FontAwesomeIcon icon={faEdit} />
-                  </button>
-                  <button
-                    className="btn-icon btn-danger"
-                    onClick={() => handleDelete(product)}
-                    title="Delete"
-                  >
-                    <FontAwesomeIcon icon={faTrash} />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="products-grid">
+        {products.map((product) => (
+          <div className="product-card" key={product._id}>
+            <div className="product-card-image">
+              {product.productImage ? (
+                <img src={product.productImage} alt={product.name} />
+              ) : (
+                <div className="product-image-placeholder">
+                  <FontAwesomeIcon icon={faImage} />
+                </div>
+              )}
+            </div>
+            {/* <div className="product-blur"></div> */}
+            <div className="product-card-content">
+              <h3 className="product-name">{product.name}</h3>
+              <p className="product-description">{product.description}</p>
+              <div className="product-details">
+                <div className="product-price">
+                  <FontAwesomeIcon icon={faMoneyBillWave} />
+                  <span>{formatCurrency(product.price)}</span>
+                </div>
+                <div className="product-category">
+                  <FontAwesomeIcon icon={faLayerGroup} />
+                  <span>{product.category.name}</span>
+                  {product.subCategory && (
+                    <span className="product-subcategory">{product.subCategory}</span>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="product-card-actions">
+              <button
+                className="btn-icon edit-btn"
+                onClick={() => handleOpenModal(product)}
+                title="Edit"
+              >
+                <FontAwesomeIcon icon={faEdit} />
+              </button>
+              <button
+                className="btn-icon delete-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDelete(product);
+                }}
+                title="Delete"
+              >
+                <FontAwesomeIcon icon={faTrash} />
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
 
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">
-            <button 
-              className="close-icon" 
-              onClick={handleCloseModal}
-            >
+            <button className="close-icon" onClick={handleCloseModal}>
               <FontAwesomeIcon icon={faTimes} />
             </button>
             <h2>{selectedProduct ? 'Edit Product' : 'Add New Product'}</h2>
-            
             <form onSubmit={handleSubmit}>
               <div className="form-group">
-                <label htmlFor="name">Product Name</label>
+                <label htmlFor="name">
+                  <FontAwesomeIcon icon={faBox} /> Product Name*
+                </label>
                 <input
                   type="text"
                   id="name"
@@ -232,9 +281,10 @@ const Items = () => {
                   required
                 />
               </div>
-              
               <div className="form-group">
-                <label htmlFor="description">Description</label>
+                <label htmlFor="description">
+                  <FontAwesomeIcon icon={faTag} /> Description
+                </label>
                 <textarea
                   id="description"
                   name="description"
@@ -243,12 +293,43 @@ const Items = () => {
                   rows="3"
                 ></textarea>
               </div>
-              
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="category">
+                    Category*
+                  </label>
+                  <select
+                    id="category"
+                    name="category"
+                    value={formData.category}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="">Select a category</option>
+                    {categories.map(category => (
+                      <option key={category._id} value={category._id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="subCategory">
+                    Sub-Category
+                  </label>
+                  <input
+                    type="text"
+                    id="subCategory"
+                    name="subCategory"
+                    value={formData.subCategory}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="price">
-                    <FontAwesomeIcon icon={faMoneyBillWave} style={{ marginRight: '8px' }} />
-                    Price
+                    <FontAwesomeIcon icon={faMoneyBillWave} /> Price (₹)*
                   </label>
                   <input
                     type="number"
@@ -256,70 +337,31 @@ const Items = () => {
                     name="price"
                     value={formData.price}
                     onChange={handleChange}
-                    step="0.01"
                     min="0"
+                    step="0.01"
                     required
                   />
                 </div>
-                
                 <div className="form-group">
-                  <label htmlFor="category">
-                    <FontAwesomeIcon icon={faTag} style={{ marginRight: '8px' }} />
-                    Category
+                  <label htmlFor="productImage">
+                    <FontAwesomeIcon icon={faImage} /> Product Image URL
                   </label>
                   <input
                     type="text"
-                    id="category"
-                    name="category"
-                    value={formData.category}
+                    id="productImage"
+                    name="productImage"
+                    value={formData.productImage}
                     onChange={handleChange}
+                    placeholder="https://example.com/image.jpg"
                   />
                 </div>
               </div>
-              
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="stock">
-                    <FontAwesomeIcon icon={faBox} style={{ marginRight: '8px' }} />
-                    Stock Quantity
-                  </label>
-                  <input
-                    type="number"
-                    id="stock"
-                    name="stock"
-                    value={formData.stock}
-                    onChange={handleChange}
-                    min="0"
-                  />
-                </div>
-                
-                <div className="form-group">
-                  <label htmlFor="unit">Unit</label>
-                  <select
-                    id="unit"
-                    name="unit"
-                    value={formData.unit}
-                    onChange={handleChange}
-                  >
-                    <option value="piece">Piece</option>
-                    <option value="kg">Kilogram</option>
-                    <option value="litre">Litre</option>
-                    <option value="pack">Pack</option>
-                    <option value="box">Box</option>
-                  </select>
-                </div>
-              </div>
-              
               <div className="modal-actions">
-                <button 
-                  type="button" 
-                  className="btn btn-secondary" 
-                  onClick={handleCloseModal}
-                >
+                <button type="button" className="btn secondary" onClick={handleCloseModal}>
                   Cancel
                 </button>
-                <button type="submit" className="btn btn-primary">
-                  {selectedProduct ? 'Update Product' : 'Add Product'}
+                <button type="submit" className="btn primary">
+                  {selectedProduct ? 'Update Product' : 'Create Product'}
                 </button>
               </div>
             </form>
