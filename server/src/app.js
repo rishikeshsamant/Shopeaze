@@ -15,7 +15,7 @@ const app = express();
 
 const corsOrigin = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.replace(/"/g, "")
-  : "https://shopeaze-frontend.onrender.com/";
+  : "https://shopeaze-frontend.onrender.com";
 
 
 app.use(

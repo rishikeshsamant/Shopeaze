@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 
 // Create axios instance with base configuration
 const axiosClient = axios.create({
-  baseURL: 'http://localhost:8000/api',
+  baseURL: 'https://shopeaze-server.onrender.com/api',
   headers: {
     'Content-Type': 'application/json',
   },
