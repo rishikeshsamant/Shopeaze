@@ -1,22 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/Setting.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSave, faGlobe, faMapMarkerAlt, faBuilding, faHome, faImage } from '@fortawesome/free-solid-svg-icons';
+import { faSave, faGlobe, faMapMarkerAlt, faBuilding, faHome, faImage, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { useAuth } from '../contexts/AuthContext';
+import { settingsService } from '../services/api';
+import { toast } from 'react-toastify';
 
 const Setting = () => {
+  const { currentUser } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [savingCompany, setSavingCompany] = useState(false);
+  const [savingApp, setSavingApp] = useState(false);
+  
   // Initial state that matches the backend schema
   const [settings, setSettings] = useState({
-    user: "user123", // This would come from auth context in production
-    businessName: "Shopeaze Inc.",
-    logo: "https://via.placeholder.com/150",
+    businessName: "",
+    logo: "",
     language: "English",
     country: "India",
-    address: "123 Business Street, Suite 100, Mumbai, India",
+    address: "",
     home: "/dashboard" // Default home page path
   });
 
   // Form state to track changes
   const [formData, setFormData] = useState({...settings});
+
+  // Fetch settings on component mount
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        setLoading(true);
+        const response = await settingsService.getSettings();
+        if (response.data) {
+          setSettings(response.data);
+          setFormData(response.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch settings:', error);
+        toast.error('Failed to load settings');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (currentUser) {
+      fetchSettings();
+    }
+  }, [currentUser]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -26,18 +56,76 @@ const Setting = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleCompanySubmit = async (e) => {
     e.preventDefault();
-    // Here you would make an API call to update settings
-    setSettings(formData);
-    alert('Settings saved successfully!');
+    
+    try {
+      setSavingCompany(true);
+      
+      const companyData = {
+        businessName: formData.businessName,
+        logo: formData.logo,
+        language: formData.language,
+        country: formData.country,
+        address: formData.address
+      };
+      
+      const response = await settingsService.updateCompanyInfo(companyData);
+      if (response.data) {
+        setSettings(prev => ({
+          ...prev,
+          ...response.data
+        }));
+        toast.success('Company settings saved successfully!');
+      }
+    } catch (error) {
+      console.error('Failed to update company settings:', error);
+      toast.error('Failed to save company settings');
+    } finally {
+      setSavingCompany(false);
+    }
   };
+
+  const handleAppSettingsSubmit = async (e) => {
+    e.preventDefault();
+    
+    try {
+      setSavingApp(true);
+      
+      const appSettings = {
+        home: formData.home
+      };
+      
+      const response = await settingsService.updateInvoiceSettings(appSettings);
+      if (response.data) {
+        setSettings(prev => ({
+          ...prev,
+          ...response.data
+        }));
+        toast.success('Application settings saved successfully!');
+      }
+    } catch (error) {
+      console.error('Failed to update application settings:', error);
+      toast.error('Failed to save application settings');
+    } finally {
+      setSavingApp(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="settings-loading">
+        <FontAwesomeIcon icon={faSpinner} spin className="loading-icon" />
+        <p>Loading settings...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="settings-container">
       <h1 className="settings-title">Settings</h1>
       
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleCompanySubmit}>
         <div className="settings-card">
           <h2 className="card-title">
             <FontAwesomeIcon icon={faBuilding} /> Company Information
@@ -109,9 +197,25 @@ const Setting = () => {
                 onChange={handleChange}
               ></textarea>
             </div>
+            
+            <div className="form-group full-width">
+              <button type="submit" className="btn primary" disabled={savingCompany}>
+                {savingCompany ? (
+                  <>
+                    <FontAwesomeIcon icon={faSpinner} spin /> Saving...
+                  </>
+                ) : (
+                  <>
+                    <FontAwesomeIcon icon={faSave} /> Save Company Info
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
-        
+      </form>
+      
+      <form onSubmit={handleAppSettingsSubmit}>
         <div className="settings-card">
           <h2 className="card-title">
             <FontAwesomeIcon icon={faHome} /> Application Settings
@@ -132,8 +236,16 @@ const Setting = () => {
             </div>
             
             <div className="form-group full-width">
-              <button type="submit" className="btn primary">
-                <FontAwesomeIcon icon={faSave} /> Save Changes
+              <button type="submit" className="btn primary" disabled={savingApp}>
+                {savingApp ? (
+                  <>
+                    <FontAwesomeIcon icon={faSpinner} spin /> Saving...
+                  </>
+                ) : (
+                  <>
+                    <FontAwesomeIcon icon={faSave} /> Save App Settings
+                  </>
+                )}
               </button>
             </div>
           </div>
