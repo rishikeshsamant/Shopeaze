@@ -7,6 +7,10 @@ const userSchema = new mongoose.Schema(
     password: String,
     phoneNumber: String,
     address: String,
+    profilePicture: {
+      type: String,
+      default: "", 
+    },
   },
   { timestamps: true }
 );
