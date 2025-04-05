@@ -20,7 +20,9 @@ import {
   faStickyNote,
   faShoppingCart,
   faCheck,
-  faSave
+  faSave,
+  faArrowRight,
+  faClock
 } from '@fortawesome/free-solid-svg-icons';
 
 const Invoice = () => {
@@ -143,8 +145,8 @@ const Invoice = () => {
   const formatCurrency = (val) => {
     if (val === undefined || val === null) return '₹0.00';
     return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
+    style: 'currency',
+    currency: 'INR',
     }).format(val);
   };
 
@@ -274,39 +276,69 @@ const Invoice = () => {
         </button>
       </div>
 
-      <table className="invoice-table">
-        <thead>
-          <tr>
-            <th><FontAwesomeIcon icon={faTag} style={{ marginRight: '8px' }} />Invoice #</th>
-            <th><FontAwesomeIcon icon={faUser} style={{ marginRight: '8px' }} />Customer</th>
-            <th><FontAwesomeIcon icon={faRupeeSign} style={{ marginRight: '8px' }} />Total</th>
-            <th><FontAwesomeIcon icon={faCheck} style={{ marginRight: '8px' }} />Status</th>
-            <th><FontAwesomeIcon icon={faCalendarAlt} style={{ marginRight: '8px' }} />Created</th>
-            <th><FontAwesomeIcon icon={faCalendarAlt} style={{ marginRight: '8px' }} />Due</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {invoices.map((inv) => (
-            <tr key={inv._id}>
-              <td>{inv.invoiceNumber}</td>
-              <td>{inv.customer.name}</td>
-              <td>{formatCurrency(inv.total)}</td>
-              <td><span className={`badge ${inv.status}`}>{inv.status}</span></td>
-              <td>{formatDate(inv.createdAt)}</td>
-              <td>{formatDate(inv.dueDate)}</td>
-              <td>
-                <button onClick={() => openModal(inv)}>
-                  <FontAwesomeIcon icon={faEdit} />
-                </button>
-                <button onClick={() => deleteInvoice(inv)}>
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="invoice-grid">
+        {invoices.map((inv) => (
+          <div className="invoice-card" key={inv._id}>
+            <div className="invoice-card-header">
+              <div className="invoice-number">
+                <FontAwesomeIcon icon={faFileInvoice} />
+                <span>{inv.invoiceNumber}</span>
+              </div>
+              <div className={`invoice-status ${inv.status}`}>
+                {inv.status === 'paid' && <FontAwesomeIcon icon={faCheck} />}
+                {inv.status === 'sent' && <FontAwesomeIcon icon={faArrowRight} />}
+                {inv.status === 'draft' && <FontAwesomeIcon icon={faEdit} />}
+                {inv.status === 'overdue' && <FontAwesomeIcon icon={faClock} />}
+                <span>{inv.status}</span>
+              </div>
+            </div>
+            
+            <div className="invoice-card-content">
+              <div className="invoice-customer">
+                <FontAwesomeIcon icon={faUser} />
+                <span>{inv.customer.name}</span>
+              </div>
+              
+              <div className="invoice-amount">
+                <FontAwesomeIcon icon={faMoneyBillWave} />
+                <span>{formatCurrency(inv.total)}</span>
+              </div>
+              
+              <div className="invoice-dates">
+                <div className="invoice-date">
+                  <FontAwesomeIcon icon={faCalendarAlt} />
+                  <span>Created: {formatDate(inv.createdAt)}</span>
+                </div>
+                
+                <div className="invoice-date">
+                  <FontAwesomeIcon icon={faCalendarAlt} />
+                  <span>Due: {formatDate(inv.dueDate)}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="invoice-card-actions">
+              <button 
+                className="btn-icon edit-btn" 
+                onClick={() => openModal(inv)}
+                title="Edit Invoice"
+              >
+                <FontAwesomeIcon icon={faEdit} />
+              </button>
+              <button 
+                className="btn-icon delete-btn" 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  deleteInvoice(inv);
+                }}
+                title="Delete Invoice"
+              >
+                <FontAwesomeIcon icon={faTrash} />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
 
       {showModal && (
         <div className="modal-overlay">
@@ -528,11 +560,11 @@ const Invoice = () => {
                       value={formData.status || 'draft'} 
                       onChange={e => setFormData(p => ({ ...p, status: e.target.value }))}
                     >
-                      <option value="draft">Draft</option>
-                      <option value="sent">Sent</option>
-                      <option value="paid">Paid</option>
-                      <option value="overdue">Overdue</option>
-                    </select>
+                  <option value="draft">Draft</option>
+                  <option value="sent">Sent</option>
+                  <option value="paid">Paid</option>
+                  <option value="overdue">Overdue</option>
+                </select>
                   </div>
                   
                   <div>
@@ -541,12 +573,12 @@ const Invoice = () => {
                       value={formData.paymentMethod || 'cash'} 
                       onChange={e => setFormData(p => ({ ...p, paymentMethod: e.target.value }))}
                     >
-                      <option value="cash">Cash</option>
-                      <option value="card">Card</option>
-                      <option value="bank transfer">Bank Transfer</option>
-                      <option value="digital wallet">Digital Wallet</option>
-                      <option value="other">Other</option>
-                    </select>
+                  <option value="cash">Cash</option>
+                  <option value="card">Card</option>
+                  <option value="bank transfer">Bank Transfer</option>
+                  <option value="digital wallet">Digital Wallet</option>
+                  <option value="other">Other</option>
+                </select>
                   </div>
                 </div>
                 

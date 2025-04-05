@@ -53,20 +53,6 @@
   --current-item-modal-overlay: var(--item-modal-overlay-dark);
 }
 
-/* General styles */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  line-height: 1.6;
-  color: #333;
-  background-color: #f5f5f5;
-}
-
 .products-container {
   padding: 2rem;
   max-width: 1200px;
@@ -183,7 +169,7 @@ body {
   border-collapse: collapse;
 }
 
-.products-table th, 
+.products-table th,
 .products-table td {
   padding: 1rem;
   text-align: left;
@@ -239,8 +225,13 @@ body {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Modal */
@@ -350,22 +341,201 @@ body {
   .products-container {
     padding: 1rem;
   }
-  
+
   .header {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
   }
-  
+
   .header h1 {
     font-size: 24px;
   }
-  
+
   .table-container {
     overflow-x: auto;
   }
-  
+
   .form-row {
     grid-template-columns: 1fr;
   }
+}
+
+/* Add CSS for the new product card layout */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.product-card {
+  background: var(--current-card-bg, #ffffff);
+  border-radius: 16px;
+  box-shadow: 0 5px 15px rgba(137, 103, 144, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  position: relative;
+  border: 1px solid #ffe1f5;
+  display: flex;
+  flex-direction: column;
+}
+
+.dark-theme .product-card {
+  border: 1px solid #4a3a51;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(137, 103, 144, 0.15);
+}
+
+.product-card-image {
+  height: 180px;
+  overflow: hidden;
+  background-color: #f7f0f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* .product-card-image::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  background-color: #fff;
+  height: 100%;
+  width: 100%;
+  opacity: .2;
+  box-shadow: inset 4px 4px 4px rgba(0, 0, 0, 0.7);
+} */
+
+/* .product-blur{
+  width: 100%;
+  height: 6vh;
+  background: linear-gradient(to top,var(--setting-bg-dark), #ffffff);
+  position: absolute;
+  bottom: 202px;
+} */
+
+.product-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 3rem;
+  color: #dfbbda;
+}
+
+.product-card-content {
+  padding: 1.2rem;
+  flex: 1;
+}
+
+.product-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #4a3a51;
+  margin-bottom: 0.5rem;
+}
+
+.product-description {
+  font-size: 14px;
+  color: #896790;
+  opacity: 0.8;
+  margin-bottom: 1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.product-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.product-price {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: #896790;
+  font-size: 1.1rem;
+}
+
+.product-category {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #4a3a51;
+}
+
+.product-subcategory {
+  background: #ffe1f5;
+  padding: 0.3rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  color: #896790;
+  font-weight: 500;
+  margin-left: 0.5rem;
+}
+
+.product-card-actions {
+  display: flex;
+  padding: 0.8rem 1.2rem;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  background-color: rgba(242, 186, 228, 0.05);
+  border-top: 1px solid #ffe1f5;
+}
+
+.dark-theme .product-card-actions {
+  border-top: 1px solid #4a3a51;
+  background-color: rgba(74, 58, 81, 0.2);
+}
+
+.btn-icon {
+  background: transparent;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+
+.edit-btn {
+  color: #1976d2;
+  background-color: rgba(25, 118, 210, 0.1);
+}
+
+.edit-btn:hover {
+  background-color: rgba(25, 118, 210, 0.2);
+}
+
+.delete-btn {
+  color: #d32f2f;
+  background-color: rgba(211, 47, 47, 0.1);
+}
+
+.delete-btn:hover {
+  background-color: rgba(211, 47, 47, 0.2);
 }
