@@ -263,7 +263,7 @@
   border-radius: 12px;
   width: 90%;
   max-width: 900px;
-  max-height: 90vh;
+  max-height: 80vh;
   overflow-y: auto;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   animation: modalFadeIn 0.3s ease-in-out;
@@ -779,7 +779,6 @@
   .invoice-modal,
   .bill-preview-modal {
     width: 95%;
-    max-height: 95vh;
   }
   
   .total-row {
@@ -1177,4 +1176,27 @@
     padding: 0.6rem 0.5rem;
     font-size: 0.9rem;
   }
+}
+
+/* Animation for auto-filled fields */
+@keyframes highlight-field {
+  0% {
+    background-color: rgba(63, 187, 131, 0.1);
+    border-color: #3fbb83;
+  }
+  100% {
+    background-color: transparent;
+    border-color: inherit;
+  }
+}
+
+.autofill-highlight {
+  animation: highlight-field 1.5s ease-out;
+}
+
+/* Add to existing form style */
+.invoice-form input:not([type="checkbox"]),
+.invoice-form select,
+.invoice-form textarea {
+  transition: background-color 0.3s, border-color 0.3s;
 }

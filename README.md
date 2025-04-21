@@ -16,7 +16,7 @@ It’s a system that hasn’t changed in decades. And almost every small busines
 - What’s selling well?
 - Who are my repeat customers?
 
-But the problem is—setting up complex POS systems, buying expensive computers, using barcode scanners, or juggling between complicated apps and Excel sheets just isn’t realistic for them. Their earning is low and schedule is busy but their business is important to same level.These business owners don’t need fancy dashboards filled with complex charts. They need simplicity.
+But the problem is—setting up complex POS systems, buying expensive computers, using barcode scanners, or juggling between complicated apps and Excel sheets just isn’t realistic for them. Their earning is low and schedule is busy but their business is important to same level. These business owners don’t need fancy dashboards filled with complex charts. They need simplicity.
 
 ## 🛠️ How we are solving that?
 
@@ -46,4 +46,16 @@ Because we believe:
 > **"Dukaan chhoti hai toh kya hua, paisa toh tab bhi zaroori hai —  
 Kitna, kab, kaise — sab manage karo Shopeaze pe, ab sab kuch aasaan hai!"**
 
+## ⚙️ Engineered by: Team ByteMates
 
+**Team ByteMates** developed this project during **HackByte 3.0** — a 36-hour hackathon held from **4th to 6th April 2025** at **IIITDM Jabalpur, MP**.
+
+The inspiration for our idea came from a conversation with a small businessman who runs a mess meal delivery service. He once shared a challenge he was facing, and that stuck with us. We took it as a personal mission to solve that problem — and that's how **Shopeaze** was born.
+
+This project is still a work in progress, and we're continuing to build on it even after the hackathon. The **dev mode is still on**, and we're excited to make it even better in the coming weeks.
+
+Let us introduce you to the team behind **Shopeaze** and the roles each of us played in bringing this idea to life.
+
+- [**Rishikesh Samant**](https://www.linkedin.com/in/rishikeshsamant/) — *Team Lead & Backend Developer*
+- [**Yasir Akhlaque**](https://www.linkedin.com/in/yasirakhlaque/) — *Frontend Developer*
+- [**Sajal Gangwar**](https://www.linkedin.com/in/sajal-gangwar-9b572929b/) — *Designer*

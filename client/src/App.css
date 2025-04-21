@@ -491,6 +491,7 @@ body.dark-theme {
 }
 
 .nav-link.logout-link {
+  color: white;
   cursor: pointer;
   background: none;
   border: none;
