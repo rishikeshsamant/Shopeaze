@@ -52,10 +52,10 @@ Kitna, kab, kaise — sab manage karo Shopeaze pe, ab sab kuch aasaan hai!"**
 
 The inspiration for our idea came from a conversation with a small businessman who runs a mess meal delivery service. He once shared a challenge he was facing, and that stuck with us. We took it as a personal mission to solve that problem — and that's how **Shopeaze** was born.
 
-This project is still a work in progress, and we're continuing to build on it even after the hackathon. The **dev mode is still on**, and we're excited to make it even better in the coming weeks.
-
+🚨 Archived: This was our first full-fledged hackathon project. We’ve kept it raw, with all its original bugs and code, as a snapshot of where we started.
 Let us introduce you to the team behind **Shopeaze** and the roles each of us played in bringing this idea to life.
 
 - [**Rishikesh Samant**](https://www.linkedin.com/in/rishikeshsamant/) — *Team Lead & Backend Developer*
 - [**Yasir Akhlaque**](https://www.linkedin.com/in/yasirakhlaque/) — *Frontend Developer*
 - [**Sajal Gangwar**](https://www.linkedin.com/in/sajal-gangwar-9b572929b/) — *Designer*
+
