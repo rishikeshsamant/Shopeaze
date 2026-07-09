@@ -60,34 +60,42 @@ const ProtectedRoute = ({ children }) => {
 
 // Main App content with theme toggle
 function AppContent() {
-  const { theme, toggleTheme } = useTheme();
-  const { isAuthenticated, currentUser, logout } = useAuth();
-  const location = useLocation();
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
+ const { theme, toggleTheme } = useTheme();
+ const { isAuthenticated, currentUser, logout, loading } = useAuth();
+ const location = useLocation();
 
-  // Track window resize for responsive layout
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
+ const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+ const [showMobileMenu, setShowMobileMenu] = useState(false);
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+ useEffect(() => {
+   const handleResize = () => {
+     setIsMobile(window.innerWidth <= 768);
+   };
 
-  // If not authenticated, only show login/register pages
-  if (!isAuthenticated) {
-    return (
-      <div className={`app-container ${theme}-theme`}>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="*" element={<Navigate to="/login" />} />
-        </Routes>
-      </div>
-    );
-  }
+   window.addEventListener("resize", handleResize);
+   return () => window.removeEventListener("resize", handleResize);
+ }, []);
+
+ if (loading) {
+   return (
+     <div className={`app-container ${theme}-theme`}>
+       <div className="loading">Loading...</div>
+     </div>
+   );
+ }
+
+
+ if (!isAuthenticated) {
+   return (
+     <div className={`app-container ${theme}-theme`}>
+       <Routes>
+         <Route path="/login" element={<Login />} />
+         <Route path="/register" element={<Register />} />
+         <Route path="*" element={<Navigate to="/login" replace />} />
+       </Routes>
+     </div>
+   );
+ }
 
   return (
     <div className={`app-container ${theme}-theme`}>
